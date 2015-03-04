@@ -12,7 +12,7 @@ BiocStyle::markdown()
 
 - Authors: [Nathaniel Hayden](mailto:nhayden@fredhutch.org), [Martin
   Morgan](mailto:mtmorgan@fhcrc.org)
-- Modification date: 2 March 2015
+- Modification date: 4 March 2015
 
 `r Biocpkg("Rhtslib")` is an R package that provides a compiled
 version of the C `HTSlib` library for high-throughput sequence data
@@ -75,7 +75,7 @@ The statement for each platfrom modifies the `$PKG_LIBS` variable. If
 your package needs to add to the `$PKG_LIBS` variable, do so by adding
 to the `PKG_LIBS=$(RHTSLIB_LIBS)` line, e.g.,
 
-    PKG_LIBS=$(RHTSLIB_LIBS) -L/path/foo -lbar
+    PKG_LIBS=$(RHTSLIB_LIBS) -L/path/to/foolib -lfoo
 
 ### Find headers
 
@@ -85,21 +85,8 @@ file of your package, e.g.,
 
     LinkingTo: Rhtslib
 
-If `LinkingTo` is not available to you, add to `src/Makevars.win` the
-following lines
-
-    RHTSLIB_CPPFLAGS=$(shell echo 'Rhtslib::pkgconfig("PKG_CPPFLAGS")'|\
-        "${R_HOME}/bin/R" --vanilla --slave)
-    PKG_CPPFLAGS=$(RHTSLIB_CPPFLAGS)
-
-and to `src/Makevars` the following lines
-
-    RHTSLIB_CPPFLAGS=`echo 'Rhtslib::pkgconfig("PKG_CPPFLAGS")'|\
-        "${R_HOME}/bin/R" --vanilla --slave`
-    PKG_CPPFLAGS=$(RHTSLIB_CPPFLAGS)
-
-As with `$PKG_LIBS`, if your package must add to the `$PKG_CPPFLAGS`
-variable, do so by appending to the `PKG_CPPFLAGS` line.
+Note that as of R 3.0.2 LinkingTo can values can include version
+specifications, e.g., `LinkingTo: Rhtslib (>= 0.99.1)`.
     
 In C or C++ code files, use standard techniques, e.g., `#include
 "hts.h"`. Header files are available for perusal at (enter in an R
