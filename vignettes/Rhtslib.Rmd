@@ -1,0 +1,117 @@
+<!--
+\usepackage[utf8]{inputenc}
+%% \VignetteEngine{knitr::knitr}
+%% \VignetteIndexEntry{Motivation and Use of Rhtslib}
+-->
+
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown()
+```
+
+# Motivation and Use of Rhtslib
+
+- Authors: [Nathaniel Hayden](mailto:nhayden@fredhutch.org), [Martin
+  Morgan](mailto:mtmorgan@fhcrc.org)
+- Modification date: 2 March 2015
+
+`r Biocpkg("Rhtslib")` is an R package that provides a compiled
+version of the C `HTSlib` library for high-throughput sequence data
+analysis. The library provides APIs for creating, indexing,
+manipulating, and analyzing data in SAM/BAM/CRAM sequence files and
+VCF/BCF2 variant files. See the [HTSlib
+website](http://www.htslib.org/) for complete details and
+documentation.
+
+The `r Biocpkg("Rhtslib")` package is primarily useful to developers
+of other R packages who want to use the HTSlib facilities in the C
+code of their own packages.
+
+## HTSlib version
+
+The version of the included HTSlib is displayed at package load time,
+but a user can also query the HTSlib version directly by calling
+`Rhtslib:::htsVersion()` in an R session.
+
+Effort is made to update the included version of HTSlib with minor
+version releases from the HTSlib authors. If you notice the included
+HTSlib is older than the current minor release of HTSlib, please
+contact the `r Biocpkg("Rhtslib")` maintainer.
+
+## Motivation
+
+There are several advantages to using `Rhtslib`, rather than requiring
+an explicit user system dependency on `htslib` directly.
+
+- Using `Rhtslib` means that your users (who are not always
+  sophisticated system administrators) do not need to manually install
+  their own library.
+- Your application uses a defined version of `htslib`, so that you as
+  a developer can rely on presence of specific features (and bugs!)
+  rather than writing code to manage different library versions.
+  
+## Use
+
+### Link to the library
+
+To link successfully to the HTSlib included in `r Biocpkg("Rhtslib")`
+a package must include *both* a `src/Makevars.win` *and*
+`src/Makevars` file.  **Note**: the contents of `src/Makevars.win` and
+`src/Makevars` are almost identical, but not quite. Be careful of the
+differences.
+
+Create a `src/Makevars.win` file with the following lines
+
+    RHTSLIB_LIBS=$(shell echo 'Rhtslib::pkgconfig("PKG_LIBS")'|\
+        "${R_HOME}/bin/R" --vanilla --slave)
+    PKG_LIBS=$(RHTSLIB_LIBS)
+
+and a `src/Makevars` file with the following lines
+
+    RHTSLIB_LIBS=`echo 'Rhtslib::pkgconfig("PKG_LIBS")'|\
+        "${R_HOME}/bin/R" --vanilla --slave)`
+    PKG_LIBS=$(RHTSLIB_LIBS)
+
+The statement for each platfrom modifies the `$PKG_LIBS` variable. If
+your package needs to add to the `$PKG_LIBS` variable, do so by adding
+to the `PKG_LIBS=$(RHTSLIB_LIBS)` line, e.g.,
+
+    PKG_LIBS=$(RHTSLIB_LIBS) -L/path/foo -lbar
+
+### Find headers
+
+In order for the C/C++ compiler to find HTSlib headers during package
+installation, add Rhtslib to the `LinkingTo` field of the DESCRIPTION
+file of your package, e.g.,
+
+    LinkingTo: Rhtslib
+
+If `LinkingTo` is not available to you, add to `src/Makevars.win` the
+following lines
+
+    RHTSLIB_CPPFLAGS=$(shell echo 'Rhtslib::pkgconfig("PKG_CPPFLAGS")'|\
+        "${R_HOME}/bin/R" --vanilla --slave)
+    PKG_CPPFLAGS=$(RHTSLIB_CPPFLAGS)
+
+and to `src/Makevars` the following lines
+
+    RHTSLIB_CPPFLAGS=`echo 'Rhtslib::pkgconfig("PKG_CPPFLAGS")'|\
+        "${R_HOME}/bin/R" --vanilla --slave`
+    PKG_CPPFLAGS=$(RHTSLIB_CPPFLAGS)
+
+As with `$PKG_LIBS`, if your package must add to the `$PKG_CPPFLAGS`
+variable, do so by appending to the `PKG_CPPFLAGS` line.
+    
+In C or C++ code files, use standard techniques, e.g., `#include
+"hts.h"`. Header files are available for perusal at (enter in an R
+session)
+
+```{R headers}
+system.file(package="Rhtslib", "include")
+```
+
+## Implementation notes
+
+The procedure above links to the static library version of the htslib
+library. This will work on Linux, Mac OSX, and Windows, but some
+tweaks may be needed on other platforms; please notify the maintainer
+of incompatibilities.

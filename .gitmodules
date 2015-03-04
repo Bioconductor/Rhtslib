@@ -1,0 +1,4 @@
+[submodule "src/htslib"]
+	path = src/htslib
+	url = ../htslib
+	branch = 1.0-bioc

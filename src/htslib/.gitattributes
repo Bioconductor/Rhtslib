@@ -1,0 +1,7 @@
+# Set default line-ending behavior
+* text eol=lf
+
+# Omit these files from release tarballs.
+.git*           export-ignore
+/.travis.yml    export-ignore
+README.md       export-ignore

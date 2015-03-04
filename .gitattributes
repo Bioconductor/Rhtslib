@@ -1,0 +1,9 @@
+# Set default line-ending behavior
+* text eol=lf
+
+# truly binary -- keep git's grubby paws off
+*.a binary
+*.o binary
+*.dll binary
+*.la binary
+*.so binary

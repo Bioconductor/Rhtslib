@@ -1,0 +1,11 @@
+*.o
+src/htslib/version.h
+src-i386
+src-x64
+
+src/htslib/lib*.a
+lib*.dylib
+lib*.so
+lib*.so.*
+Rhtslib.so
+Rhtslib.dylib

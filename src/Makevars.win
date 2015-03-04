@@ -1,0 +1,23 @@
+HTSDIR=./htslib
+HTSLIB_LIBDIR="${R_PACKAGE_DIR}/lib${R_ARCH}"
+HTSLIB_INCLUDEDIR="${R_PACKAGE_DIR}/include"
+
+.PHONY: all Rinstall
+
+all: $(SHLIB)
+
+$(SHLIB): Rhtslib.o
+
+Rhtslib.o: Rinstall
+
+# always run so we never skip copying library & headers into
+# destination; otherwise, a user could R CMD INSTALL Rhtslib, then
+# subsequently remove the package, then try R CMD INSTALL Rhtslib
+# again--in which case the library and headers would not be
+# reinstalled
+Rinstall:
+	@mkdir -p $(HTSLIB_LIBDIR) $(HTSLIB_INCLUDEDIR)
+	cp "winlib$(R_ARCH)/libhts.a" $(HTSLIB_LIBDIR)/libhts.a
+	cp $(HTSLIB_PUBLIC_HEADERS) "$(HTSLIB_INCLUDEDIR)"
+
+include $(HTSDIR)/htslib.mk
