@@ -13,7 +13,7 @@ pkgconfig <-
         sprintf('-I"%s"', system.file("include", package="Rhtslib"))
     }, PKG_LIBS={
         switch(Sys.info()['sysname'], Linux={
-            sprintf('-L"%s" -Wl,-rpath,"%s" -lhts -lz -pthread',
+            sprintf('-L%s -Wl,-rpath,"%s" -lhts -lz -pthread',
                     patharch, patharch)
         }, Darwin={
             sprintf('-L%s -lhts -lz -pthread', patharch)
