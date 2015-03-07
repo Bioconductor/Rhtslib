@@ -12,7 +12,7 @@ BiocStyle::markdown()
 
 - Authors: [Nathaniel Hayden](mailto:nhayden@fredhutch.org), [Martin
   Morgan](mailto:mtmorgan@fhcrc.org)
-- Modification date: 4 March 2015
+- Modification date: 6 March 2015
 
 `r Biocpkg("Rhtslib")` is an R package that provides a compiled
 version of the C `HTSlib` library for high-throughput sequence data

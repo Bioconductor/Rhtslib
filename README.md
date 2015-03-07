@@ -1,7 +1,7 @@
 Rhtslib
 =======
 
-This R package provides version 1.1 of the
+This R package provides version 1.0 of the
 [HTSlib](https://github.com/samtools/htslib) C library for
 high-throughput sequence analysis. The package is primarily useful to
 developers of other R packages who wish to make use of HTSlib. The
