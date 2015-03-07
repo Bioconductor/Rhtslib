@@ -51,6 +51,10 @@ an explicit user system dependency on `htslib` directly.
   
 ## Use
 
+There is an example package,
+[`link2Rhtslib`](https://github.com/nhayden/link2Rhtslib), that
+demonstrates how reverse dependencies should link to `Rhtslib`.
+
 ### Link to the library
 
 To link successfully to the HTSlib included in `r Biocpkg("Rhtslib")`
