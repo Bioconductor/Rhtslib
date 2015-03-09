@@ -1,11 +1,37 @@
-lib_LIBRARIES = libhts.a
+lib_LTLIBRARIES = libhts.la
+noinst_LTLIBRARIES = lib/libgnu.la
 
-# allows 'make (bgzip|htsfile|tabix|libhts.a)' instead of relying on
+# allows 'make (bgzip|htsfile|tabix|libhts.la)' instead of relying on
 # making all.
-lib/libgnu.a:
+lib/libgnu.la:
 	cd ./lib && $(MAKE) $(AM_MAKEFLAGS) && cd ..
 
-libhts_a_SOURCES = \
+libhts_la_CPPFLAGS = -Ihtslib -Icram $(AM_CPPFLAGS)
+
+libhts_la_LIBADD = lib/libgnu.la
+libhts_la_LDFLAGS = $(LIBSOCKET) $(LIB_FDATASYNC) -no-undefined
+
+bin_PROGRAMS = bgzip htsfile tabix
+
+AM_CPPFLAGS = -I$(top_srcdir)/lib -I$(top_srcdir)/htslib
+AM_LDADD = $(top_srcdir)/lib/libgnu.la $(LIBSOCKET) $(LIB_FDATASYNC)
+
+bgzip_LDADD = $(top_srcdir)/libhts.la $(AM_LDADD)
+bgzip_SOURCES = bgzip.c
+
+htsfile_LDADD = $(top_srcdir)/libhts.la $(AM_LDADD)
+htsfile_SOURCES = htsfile.c
+
+tabix_LDADD = $(top_srcdir)/libhts.la $(AM_LDADD)
+tabix_SOURCES = tabix.c
+
+SUBDIRS = lib test
+ACLOCAL_AMFLAGS = -I m4
+EXTRA_DIST = m4/gnulib-cache.m4
+
+TESTS = run_tests.sh
+
+libhts_la_SOURCES = \
 kfunc.c \
 knetfile.c \
 kstring.c \
@@ -40,32 +66,22 @@ cram/thread_pool.c \
 cram/vlen.c \
 cram/zfio.c
 
-libhts_a_CPPFLAGS = -Ihtslib -Icram $(AM_CPPFLAGS)
-
-# HACK: this should change once we make libtool libraries instead;
-# forcing object files that get archived into libgnu.a to be included
-# *directly*. lib/libgnu.a is mentioned to force the dependency to
-# build first. Instead we'll want to use libhts_la_LDFLAGS
-libhts_a_LIBADD = lib/libgnu.a $(shell ls lib/*.$(OBJEXT))
-#$(LIBSOCKET) $(LIB_FDATASYNC)
-
-
-bin_PROGRAMS = bgzip htsfile tabix
-
-AM_CPPFLAGS = -I$(top_srcdir)/lib -I$(top_srcdir)/htslib
-AM_LDADD = $(top_srcdir)/lib/libgnu.a $(LIBSOCKET) $(LIB_FDATASYNC)
-
-bgzip_LDADD = $(top_srcdir)/libhts.a $(AM_LDADD)
-bgzip_SOURCES = bgzip.c
-
-htsfile_LDADD = libhts.a $(AM_LDADD)
-htsfile_SOURCES = htsfile.c
-
-tabix_LDADD = libhts.a $(AM_LDADD)
-tabix_SOURCES = tabix.c
-
-SUBDIRS = lib test
-ACLOCAL_AMFLAGS = -I m4
-EXTRA_DIST = m4/gnulib-cache.m4
-
-TESTS = run_tests.sh
+include_HEADERS = \
+htslib/bgzf.h \
+htslib/faidx.h \
+htslib/hfile.h \
+htslib/hts.h \
+htslib/hts_defs.h \
+htslib/khash.h \
+htslib/klist.h \
+htslib/knetfile.h \
+htslib/kseq.h \
+htslib/ksort.h \
+htslib/kstring.h \
+htslib/regidx.h \
+htslib/sam.h \
+htslib/synced_bcf_reader.h \
+htslib/tbx.h \
+htslib/vcf.h \
+htslib/vcf_sweep.h \
+htslib/vcfutils.h

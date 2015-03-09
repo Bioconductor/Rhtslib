@@ -84,6 +84,9 @@
    don't. */
 #undef HAVE_DECL_GETDTABLESIZE
 
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
 /* Define to 1 if you have the 'dup2' function. */
 #undef HAVE_DUP2
 
@@ -766,6 +769,10 @@
 
 /* Define to 1 if you have the `_set_invalid_parameter_handler' function. */
 #undef HAVE__SET_INVALID_PARAMETER_HANDLER
+
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
 
 /* Name of package */
 #undef PACKAGE

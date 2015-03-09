@@ -1,4 +1,4 @@
-# fcntl.m4 serial 6
+# fcntl.m4 serial 8
 dnl Copyright (C) 2009-2015 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -34,6 +34,12 @@ AC_DEFUN([gl_FUNC_FCNTL],
               #include <limits.h>
               #include <sys/resource.h>
               #include <unistd.h>
+              #ifndef RLIM_SAVED_CUR
+              # define RLIM_SAVED_CUR RLIM_INFINITY
+              #endif
+              #ifndef RLIM_SAVED_MAX
+              # define RLIM_SAVED_MAX RLIM_INFINITY
+              #endif
             ]],
             [[int result = 0;
               int bad_fd = INT_MAX;
@@ -51,10 +57,10 @@ AC_DEFUN([gl_FUNC_FCNTL],
               return result;]])],
          [gl_cv_func_fcntl_f_dupfd_works=yes],
          [gl_cv_func_fcntl_f_dupfd_works=no],
-         [# Guess that it works on glibc systems
-          case $host_os in #((
-            *-gnu*) gl_cv_func_fcntl_f_dupfd_works="guessing yes";;
-            *)      gl_cv_func_fcntl_f_dupfd_works="guessing no";;
+         [case $host_os in
+            aix* | cygwin* | haiku*)
+               gl_cv_func_fcntl_f_dupfd_works="guessing no" ;;
+            *) gl_cv_func_fcntl_f_dupfd_works="guessing yes" ;;
           esac])])
     case $gl_cv_func_fcntl_f_dupfd_works in
       *yes) ;;

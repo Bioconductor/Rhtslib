@@ -12,14 +12,13 @@ BiocStyle::markdown()
 
 - Authors: [Nathaniel Hayden](mailto:nhayden@fredhutch.org), [Martin
   Morgan](mailto:mtmorgan@fhcrc.org)
-- Modification date: 6 March 2015
+- Modification date: 9 March 2015
 
-`r Biocpkg("Rhtslib")` is an R package that provides a compiled
-version of the C `HTSlib` library for high-throughput sequence data
-analysis. The library provides APIs for creating, indexing,
-manipulating, and analyzing data in SAM/BAM/CRAM sequence files and
-VCF/BCF2 variant files. See the [HTSlib
-website](http://www.htslib.org/) for complete details and
+`r Biocpkg("Rhtslib")` is an R package that provides the C `HTSlib`
+library for high-throughput sequence data analysis. The library
+provides APIs for creating, indexing, manipulating, and analyzing data
+in SAM/BAM/CRAM sequence files and VCF/BCF2 variant files. See the
+[HTSlib website](http://www.htslib.org/) for complete details and
 documentation.
 
 The `r Biocpkg("Rhtslib")` package is primarily useful to developers
@@ -90,7 +89,7 @@ file of your package, e.g.,
     LinkingTo: Rhtslib
 
 Note that as of R 3.0.2 `LinkingTo` values can include version
-specifications, e.g., `LinkingTo: Rhtslib (>= 0.99.1)`.
+specifications, e.g., `LinkingTo: Rhtslib (>= 0.99.10)`.
     
 In C or C++ code files, use standard techniques, e.g., `#include
 "hts.h"`. Header files are available for perusal at (enter in an R
@@ -102,7 +101,8 @@ system.file(package="Rhtslib", "include")
 
 ## Implementation notes
 
-The procedure above links to the static library version of the htslib
-library. This will work on Linux, Mac OSX, and Windows, but some
-tweaks may be needed on other platforms; please notify the maintainer
-of incompatibilities.
+`Rhtslib` provides both static and dynamic library versions of HTSlib
+on Linux and Mac OS X platforms, but only the static version on
+Windows. In most cases, for Linux and Mac OS X the procedure above
+will link to the dynamic library version of HTSlib. Please let the
+maintainer know if you run into issues with this strategy.
