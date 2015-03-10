@@ -85,3 +85,11 @@ htslib/tbx.h \
 htslib/vcf.h \
 htslib/vcf_sweep.h \
 htslib/vcfutils.h
+
+man1_MANS = \
+tabix.1
+
+man5_MANS = \
+faidx.5 \
+sam.5 \
+vcf.5
