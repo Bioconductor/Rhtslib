@@ -1,7 +1,7 @@
 Package: Rhtslib
 Type: Package
 Title: HTSlib high-throughput sequencing library as an R package
-Version: 0.99.12
+Version: 0.99.13
 Authors@R:
     c(person("Nathaniel", "Hayden", email="nhayden@fredhutch.org",
         role=c("cre", "aut")),
@@ -11,7 +11,7 @@ Description: This package provides version 1.1 of the 'HTSlib' C
     library for high-throughput sequence analysis. The package is
     primarily useful to developers of other R packages who wish to
     make use of HTSlib. Motivation and instructions for use of this
-    package are in the vignette, vignette("Rhtslib").
+    package are in the vignette, vignette(package="Rhtslib", "Rhtslib").
 License: Artistic-2.0
 LazyLoad: yes
 Imports: zlibbioc
