@@ -2,8 +2,8 @@
 # tools to avoid dependency on having a suitable version of autoconf &
 # related tools installed
 
-cp tools/config.guess tools/config.sub tools/depcomp tools/install-sh \
-    tools/ltmain.sh tools/Makefile.in tools/missing tools/configure \
-    tools/config.h.in src/htslib
+cp tools/compile tools/config.guess tools/config.h.in tools/config.sub \
+    tools/configure tools/depcomp tools/install-sh tools/ltmain.sh \
+    tools/Makefile.in tools/missing tools/test-driver src/htslib
 cp tools/lib_Makefile.in src/htslib/lib/Makefile.in
 cp tools/test_Makefile.in src/htslib/test/Makefile.in
