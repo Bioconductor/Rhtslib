@@ -52,7 +52,6 @@ AC_DEFUN([gl_EARLY],
   # Code from module fcntl-h:
   # Code from module fd-hook:
   # Code from module fdatasync:
-  # Code from module fileblocks:
   # Code from module fsync:
   # Code from module getdtablesize:
   # Code from module getpagesize:
@@ -74,7 +73,6 @@ AC_DEFUN([gl_EARLY],
   # Code from module socketlib:
   # Code from module socklen:
   # Code from module ssize_t:
-  # Code from module stat-size:
   # Code from module stdalign:
   # Code from module stddef:
   # Code from module stdint:
@@ -135,11 +133,6 @@ AC_SUBST([LTALLOCA])
     AC_LIBOBJ([fdatasync])
   fi
   gl_UNISTD_MODULE_INDICATOR([fdatasync])
-  gl_FILEBLOCKS
-  if test $ac_cv_member_struct_stat_st_blocks = no; then
-    AC_LIBOBJ([fileblocks])
-    gl_PREREQ_FILEBLOCKS
-  fi
   gl_FUNC_FSYNC
   if test $HAVE_FSYNC = 0; then
     AC_LIBOBJ([fsync])
@@ -189,7 +182,6 @@ AC_SUBST([LTALLOCA])
   AC_REQUIRE([gl_SOCKETLIB])
   gl_TYPE_SOCKLEN_T
   gt_TYPE_SSIZE_T
-  gl_STAT_SIZE
   gl_STDALIGN_H
   gl_STDDEF_H
   gl_STDINT_H
@@ -360,7 +352,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/fd-hook.c
   lib/fd-hook.h
   lib/fdatasync.c
-  lib/fileblocks.c
   lib/fsync.c
   lib/getdtablesize.c
   lib/getpagesize.c
@@ -374,7 +365,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/recv.c
   lib/send.c
   lib/signal.in.h
-  lib/stat-size.h
   lib/stdalign.in.h
   lib/stddef.in.h
   lib/stdint.in.h
@@ -404,7 +394,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/fcntl.m4
   m4/fcntl_h.m4
   m4/fdatasync.m4
-  m4/fileblocks.m4
   m4/fsync.m4
   m4/getdtablesize.m4
   m4/getpagesize.m4
@@ -424,7 +413,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/socklen.m4
   m4/sockpfaf.m4
   m4/ssize_t.m4
-  m4/stat-size.m4
   m4/stdalign.m4
   m4/stddef_h.m4
   m4/stdint.m4

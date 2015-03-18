@@ -304,7 +304,6 @@ void hclose_abruptly(hFILE *fp)
 
 #include <sys/socket.h>
 #include <sys/stat.h>
-#include "stat-size.h"
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -391,8 +390,10 @@ static size_t blksize(int fd)
 {
     struct stat sbuf;
     if (fstat(fd, &sbuf) != 0) return 0;
-    /* Gnulib makes a macro that automatically Does The Right Thing */
-    return ST_BLKSIZE(sbuf);
+#ifdef HAVE_STRUCT_STAT_ST_BLKSIZE
+    return sbuf.st_blksize;
+#endif
+    return 0;
 }
 
 static hFILE *hopen_fd(const char *filename, const char *mode)
