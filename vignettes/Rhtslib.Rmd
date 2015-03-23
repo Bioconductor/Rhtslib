@@ -71,7 +71,7 @@ Create a `src/Makevars.win` file with the following lines
 and a `src/Makevars` file with the following lines
 
     RHTSLIB_LIBS=`echo 'Rhtslib::pkgconfig("PKG_LIBS")'|\
-        "${R_HOME}/bin/R" --vanilla --slave)`
+        "${R_HOME}/bin/R" --vanilla --slave`
     PKG_LIBS=$(RHTSLIB_LIBS)
 
 The statement for each platfrom modifies the `$PKG_LIBS` variable. If
