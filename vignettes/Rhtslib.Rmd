@@ -82,11 +82,12 @@ to the `PKG_LIBS=$(RHTSLIB_LIBS)` line, e.g.,
 
 ### Find headers
 
-In order for the C/C++ compiler to find HTSlib headers during package
-installation, add Rhtslib to the `LinkingTo` field of the DESCRIPTION
-file of your package, e.g.,
+In order for the C/C++ compiler to find HTSlib headers (and zlib
+headers on Windows) during package installation, add `Rhtslib` and
+`zlibbioc` to the `LinkingTo` field of the DESCRIPTION file of your
+package, e.g.,
 
-    LinkingTo: Rhtslib
+    LinkingTo: Rhtslib, zlibbioc
 
 Note that as of R 3.0.2 `LinkingTo` values can include version
 specifications, e.g., `LinkingTo: Rhtslib (>= 0.99.10)`.
