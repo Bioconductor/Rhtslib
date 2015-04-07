@@ -18,7 +18,7 @@ pkgconfig <-
         }, Darwin={
             sprintf('-L%s -lhts -lz -pthread', patharch)
         }, Windows={
-            sprintf('-L"%s" -lhts -pthread -lws2_32 "%s"',
+            sprintf('-L"%s" -lhts -pthread -lws2_32 %s',
                     patharch,
                     capture.output(zlibbioc::pkgconfig("PKG_LIBS_static")))
         }
