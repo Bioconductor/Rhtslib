@@ -100,6 +100,7 @@ include_HEADERS = \
 	htslib/hts.h \
 	htslib/hts_defs.h \
 	htslib/khash.h \
+	htslib/khash_str2int.h \
 	htslib/klist.h \
 	htslib/knetfile.h \
 	htslib/kseq.h \

@@ -31,6 +31,7 @@ AC_PREREQ([2.67])
 AC_INIT([HTSlib], [1.1], [samtools-help@lists.sourceforge.net], [],
         [http://www.htslib.org/])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
+AM_MAINTAINER_MODE([enable])
 AC_USE_SYSTEM_EXTENSIONS
 LT_INIT
 AC_CONFIG_MACRO_DIR([m4])
