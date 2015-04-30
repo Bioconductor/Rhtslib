@@ -9,6 +9,11 @@ R_LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 R_CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 R_CPP=`"${R_HOME}/bin/R" CMD config CPP`
 
+R_BIN="${R_HOME}/bin/R"
+ON_SNOWLEOPARD=`echo 'if(Sys.info()["sysname"] == "Darwin" && \
+    grepl("^10.8", Sys.info()["release"])) cat("1") else cat("0")' |\
+    ${R_BIN} --vanilla --slave`
+
 .PHONY: all clean Rinstall
 
 all: $(SHLIB)
@@ -34,6 +39,9 @@ Rinstall: $(HTSDIR)/libhts.la
 
 ## yes, need to 'cd' into $(HTSDIR) for each command
 $(HTSDIR)/libhts.la:
+        ## if on Snow Leopard, touch all files so it doesn't think it
+        ## needs to rerun aclocal & co.
+	@if [ ${ON_SNOWLEOPARD} == "1" ]; then find . | xargs touch ; fi
         ## run ./htslib/configure
 	@echo "running configuration..."
 	cd $(HTSDIR)/ && ./configure --disable-dependency-tracking \
