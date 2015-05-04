@@ -99,6 +99,7 @@ include_HEADERS = \
 	htslib/hfile.h \
 	htslib/hts.h \
 	htslib/hts_defs.h \
+	htslib/kfunc.h \
 	htslib/khash.h \
 	htslib/khash_str2int.h \
 	htslib/klist.h \
