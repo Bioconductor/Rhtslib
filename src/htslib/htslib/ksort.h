@@ -66,7 +66,7 @@
 
 #ifdef __MINGW32__
 #define drand48() (rand()*(1./RAND_MAX))
-#define lrand48() (rand())
+#define lrand48() ((long int)rand())
 #define srand48(seed) (srand((seed)))
 #endif
 
