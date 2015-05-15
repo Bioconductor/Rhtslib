@@ -2018,7 +2018,7 @@ int bcf_unpack(bcf1_t *b, int which)
     return 0;
 }
 
-int vcf_format(const bcf_hdr_t *h, const bcf1_t *v, kstring_t *s)
+int vcf_format(const bcf_hdr_t *h, const bcf1_t *v, kstring_t *s, int omit_sample_cols)
 {
     int i;
     bcf_unpack((bcf1_t*)v, BCF_UN_ALL);
@@ -2091,20 +2091,22 @@ int vcf_format(const bcf_hdr_t *h, const bcf1_t *v, kstring_t *s)
                 kputs(h->id[BCF_DT_ID][fmt[i].id].key, s);
                 if (strcmp(h->id[BCF_DT_ID][fmt[i].id].key, "GT") == 0) gt_i = i;
             }
-            if ( first ) kputs("\t.", s);
-            for (j = 0; j < v->n_sample; ++j) {
-                kputc('\t', s);
-                first = 1;
-                for (i = 0; i < (int)v->n_fmt; ++i) {
-                    bcf_fmt_t *f = &fmt[i];
-                    if ( !f->p ) continue;
-                    if (!first) kputc(':', s); first = 0;
-                    if (gt_i == i)
-                        bcf_format_gt(f,j,s);
-                    else
-                        bcf_fmt_array(s, f->n, f->type, f->p + j * f->size);
+            if ( !omit_sample_cols ) {
+                if ( first ) kputs("\t.", s);
+                for (j = 0; j < v->n_sample; ++j) {
+                    kputc('\t', s);
+                    first = 1;
+                    for (i = 0; i < (int)v->n_fmt; ++i) {
+                        bcf_fmt_t *f = &fmt[i];
+                        if ( !f->p ) continue;
+                        if (!first) kputc(':', s); first = 0;
+                        if (gt_i == i)
+                            bcf_format_gt(f,j,s);
+                        else
+                            bcf_fmt_array(s, f->n, f->type, f->p + j * f->size);
+                    }
+                    if ( first ) kputc('.', s);
                 }
-                if ( first ) kputc('.', s);
             }
         }
         else

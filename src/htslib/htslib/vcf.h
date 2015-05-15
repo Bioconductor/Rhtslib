@@ -236,7 +236,7 @@ extern "C" {
     #define bcf_destroy1(v)     bcf_destroy(v)
     #define vcf_parse1(s,h,v)   vcf_parse((s),(h),(v))
     #define bcf_clear1(v)       bcf_clear(v)
-    #define vcf_format1(h,v,s)  vcf_format((h),(v),(s))
+    #define vcf_format1(h,v,s)  vcf_format((h),(v),(s),(0)) /* Rsamtools */
 
     /**
      *  bcf_hdr_init() - create an empty BCF header.
@@ -313,7 +313,12 @@ extern "C" {
     int vcf_parse(kstring_t *s, const bcf_hdr_t *h, bcf1_t *v);
 
     /** The opposite of vcf_parse. It should rarely be called directly, see vcf_write */
-    int vcf_format(const bcf_hdr_t *h, const bcf1_t *v, kstring_t *s);
+
+    /* Rsamtools set omit_sample_cols if individual sample data
+     * will be treated separately; if true, only columns 1-9 (ending
+     * with FORMAT) are added to the string, whereas actual sample
+     * information is omitted */
+    int vcf_format(const bcf_hdr_t *h, const bcf1_t *v, kstring_t *s, int omit_sample_cols);
 
     /**
      *  bcf_read() - read next VCF or BCF record
