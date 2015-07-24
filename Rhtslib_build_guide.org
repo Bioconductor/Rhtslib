@@ -217,31 +217,32 @@ makes them happy; see test/Makefile.am
   on top, e.g., BAM_DATA struct, etc.
 
 * What's in Rsamtools
-libbam.a libbcf.a libtabix.a
+libbam.a
 
 Rhtslib: libhts.a
-
 
 ** oddities
 - there are duplicate header file names if you consider the union of
   files for htslib and samtools.
 
 * How to add to Gnulib modules
-** --lgpl2!
+Pretty straightforward; clone the git repository
+http://savannah.gnu.org/git/?group=gnulib
 
-* guide to what's in htslib submodule
-configure.ac - handwritten
-Makefile.am - handwritten
-htslib.mk, htslib.pc.in, htslib_vars.mk - relics left from original build system
-lib/ - where imported gnulib stuff lives
-m4/ - macros for m4 macro language; part of the autotools environment
-snippet/ - don't touch; never had a need to modify / look in it; just added .gitignore
-test - mostly as it came to me through fork; added Makefile.am
+There's a directory that has the gnulib-tool. Interact with it
+following something like the sample command I have in comments in
+htslib/configure.ac
 
+*Make sure you use the --lgpl2(?) flag!*
 
-* guide to Rhtslib
-- when you update configure.ac, Makefile.am: run autoreconf -fi to
-  generate the intermediates, and stash them in Rhtslib/tools
+You can try using the --update(?) flag to add modules if it becomes
+necessary, but I've typically found it more expedient to rm the parts
+in htslib related to gnulib and re-import as if for the first time
+
+* To update Rhtslib
+- when you update configure.ac, Makefile.am: run autoreconf -fi in the
+  htslib submodule to generate the intermediate files, and stash them
+  in Rhtslib/tools
 
 * toolbox
 `nm -gC`
