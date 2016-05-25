@@ -16,7 +16,7 @@ pkgconfig <-
             sprintf('-L%s -Wl,-rpath,%s -lhts -lz -pthread',
                     patharch, patharch)
         }, Darwin={
-            sprintf('-L%s -lhts -lz -pthread', patharch)
+            sprintf('%s/libhts.a -lz -pthread', patharch)
         }, Windows={
             sprintf('-L"%s" -lhts -lz -pthread -lws2_32', patharch)
         }
