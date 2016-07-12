@@ -7,3 +7,5 @@ cp tools/compile tools/config.guess tools/config.h.in tools/config.sub \
     tools/Makefile.in tools/missing tools/test-driver src/htslib
 cp tools/lib_Makefile.in src/htslib/lib/Makefile.in
 cp tools/test_Makefile.in src/htslib/test/Makefile.in
+touch src/htslib/aclocal.m4
+touch src/htslib/Makefile.in 
