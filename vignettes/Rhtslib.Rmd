@@ -1,18 +1,23 @@
-<!--
-\usepackage[utf8]{inputenc}
-%% \VignetteEngine{knitr::knitr}
-%% \VignetteIndexEntry{Motivation and Use of Rhtslib}
--->
+---
+title: "Motivation and use of _Rhtslib_"
+author: "Nathaniel Hayden, Martin Morgan"
+date: "Compiled `r doc_date()`;  Modified 20 June 2017"
+package: "`r pkg_ver('Rhtslib')`"
+abstract: >
+  This package provides version 1.1 of the 'HTSlib' C library for
+  high-throughput sequence analysis. The package is primarily useful
+  to developers of other R packages who wish to make use of
+  HTSlib. Motivation and instructions for use of this package are in
+  this vignette.
+vignette: >
+  %\VignetteIndexEntry{Motivation and use of Rhtslib}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+output: 
+  BiocStyle::html_document2
+---
 
-```{r style, echo = FALSE, results = 'asis'}
-BiocStyle::markdown()
-```
-
-# Motivation and Use of Rhtslib
-
-- Authors: [Nathaniel Hayden](mailto:nhayden@fredhutch.org), [Martin
-  Morgan](mailto:mtmorgan@fhcrc.org)
-- Modification date: 9 March 2015
+# Motivation
 
 `r Biocpkg("Rhtslib")` is an R package that provides the C `HTSlib`
 library for high-throughput sequence data analysis. The library
@@ -29,7 +34,8 @@ code of their own packages.
 
 The version of the included HTSlib is displayed at package load time,
 but a user can also query the HTSlib version directly by calling
-`Rhtslib:::htsVersion()` in an R session.
+`Rhtslib:::htsVersion()` in an R session. The current version of the
+package is `r (capture.output(Rhtslib:::htsVersion(), type="message"))`.
 
 Effort is made to update the included version of HTSlib with minor
 version releases from the HTSlib authors. If you notice the included
@@ -48,13 +54,13 @@ an explicit user system dependency on `htslib` directly.
   a developer can rely on presence of specific features (and bugs!)
   rather than writing code to manage different library versions.
   
-## Use
+# Use
 
 There is an example package,
 [`link2Rhtslib`](https://github.com/nhayden/link2Rhtslib), that
 demonstrates how reverse dependencies should link to `Rhtslib`.
 
-### Link to the library
+## Link to the library
 
 To link successfully to the HTSlib included in `r Biocpkg("Rhtslib")`
 a package must include *both* a `src/Makevars.win` *and*
@@ -80,7 +86,17 @@ to the `PKG_LIBS=$(RHTSLIB_LIBS)` line, e.g.,
 
     PKG_LIBS=$(RHTSLIB_LIBS) -L/path/to/foolib -lfoo
 
-### Find headers
+The Linux implementation embeds the location of the hts library in the
+Rhtslib shared object via the compiler flag `-Wl,rpath,path`, where
+path is determined by `system.file("lib", package="Rhtslib")`. The
+path determined by `system.file()` is from `.libPaths()`, and has
+resolved symbolic links to their actual path. This can cause problems,
+e.g., when the 'head' node of a cluster mimicks the cluster node via a
+symbolic link to the directory in which Rhtslib is installed. Use the
+environment variable `RHTSLIB_RPATH` to resolve this by setting it to
+the cluster-node accessible path.
+
+## Find headers
 
 In order for the C/C++ compiler to find HTSlib headers (and zlib
 headers on Windows) during package installation, add `Rhtslib` and
@@ -100,7 +116,7 @@ session)
 system.file(package="Rhtslib", "include")
 ```
 
-## Implementation notes
+# Implementation notes
 
 `Rhtslib` provides both static and dynamic library versions of HTSlib
 on Linux and Mac OS X platforms, but only the static version on
