@@ -6,7 +6,9 @@
     This function returns values for \code{PKG_LIBS} and
     \code{PKG_CPPFLAGS} variables for use in Makevars files. See
     \code{vignette("Rhtslib", "Rhtslib")} for details. Only
-    \code{PKG_LIBS} should be needed in most cases.
+    \code{PKG_LIBS} should be needed in most cases. The environment
+    variable \code{RHTSLIB_RPATH} can be used to over-ride the inferred
+    location of the installed package.
 
 }
 \usage{
