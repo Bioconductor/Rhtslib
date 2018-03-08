@@ -1,5 +1,4 @@
-pkgconfig <-
-    function(opt = c("PKG_LIBS", "PKG_CPPFLAGS"))
+pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
 {
     usrlib <- Sys.getenv(
         "RHTSLIB_RPATH",
@@ -12,30 +11,40 @@ pkgconfig <-
     }
     usrlib_arch <- paste0(usrlib, arch)
 
-    result <- switch(match.arg(opt), PKG_CPPFLAGS={
-        sprintf('-I"%s"', system.file("include", package="Rhtslib"))
-    }, PKG_LIBS={
-        switch(Sys.info()['sysname'], Linux={
-            sprintf('-L%s -Wl,-rpath,%s -lhts -lz -pthread',
-                    usrlib_arch, usrlib_arch)
-        }, Darwin={
-            sprintf('%s/libhts.a -lz -pthread', usrlib_arch)
-        }, Windows={
-            sprintf('-L"%s" -lhts -lz -pthread -lws2_32', usrlib_arch)
-        }
-    )})
+    ## Same as htslib_default_libs variable defined in htslib-1.7/Makefile:
+    htslib_default_libs <- "-lz -lm -lbz2 -llzma"
+
+    result <- switch(match.arg(opt),
+        PKG_CPPFLAGS={
+            sprintf('-I"%s"', system.file("include", package="Rhtslib"))
+        },
+        PKG_LIBS={
+            switch(Sys.info()[["sysname"]],
+                Linux={
+                    sprintf('-L%s -Wl,-rpath,%s -lhts %s -pthread',
+                            usrlib_arch, usrlib_arch, htslib_default_libs)
+                },
+                Darwin={
+                    sprintf('%s/libhts.a %s -lcurl -lpthread',
+                            usrlib_arch, htslib_default_libs)
+                },
+                Windows={
+                    sprintf('-L"%s" -lhts -lz -pthread -lws2_32', usrlib_arch)
+                })
+        })
 
     cat(result)
 }
 
-htsVersion <- function() {
+htsVersion <- function()
+{
     vers <- .Call("Rhtslib_htslib_version", PACKAGE="Rhtslib")
     message(vers)
 }
 
-.onAttach <-
-    function(...)
+.onAttach <- function(...)
 {
     vers <- .Call("Rhtslib_htslib_version", PACKAGE="Rhtslib")
     packageStartupMessage("Rhtslib htslib version ", vers)
 }
+

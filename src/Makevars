@@ -1,21 +1,34 @@
-USRLIB=${R_PACKAGE_DIR}/usrlib
-INCDIR=${R_PACKAGE_DIR}/include
-PKG_CPPFLAGS=-I"${INCDIR}"
-PKG_LIBS=-L"${USRLIB}" -Wl,-rpath,"${USRLIB}" -lhts -lz -pthread
+## We do not configure htslib for now since default configuration seems
+## to work just fine.
+## See how htslib_default_libs is defined in htslib-1.7/Makefile. Make
+## sure to use the same value for the variable below.
+htslib_default_libs=-lz -lm -lbz2 -llzma
 
-all: usrlib incdir
+USRLIB_DIR=${R_PACKAGE_DIR}/usrlib
+INCLUDE_DIR=${R_PACKAGE_DIR}/include
 
-libhts.so:
-	cd htslib-1.7 && ./configure && $(MAKE)
+PKG_CPPFLAGS=-I"${INCLUDE_DIR}"
+PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -pthread
+## On Mac use (instead of the above):
+#PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lcurl -lpthread
 
-usrlib: libhts.so
-	mkdir -p "${USRLIB}"
-	cd htslib-1.7 && cp libhts.so libhts.a "${USRLIB}"
-	cd "${USRLIB}" && ln -s libhts.so libhts.so.2
+all: usrlib_dir include_dir
 
-incdir: libhts.so
-	mkdir -p "${INCDIR}"
-	cp htslib-1.7/htslib/* "${INCDIR}"
+htslib:
+	#cd htslib-1.7 && ./configure && $(MAKE)
+	## We do not configure htslib for now. See comment at top of this file.
+	cd htslib-1.7 && $(MAKE)
+
+usrlib_dir: htslib
+	mkdir -p "${USRLIB_DIR}"
+	cd htslib-1.7 && cp libhts.so libhts.a "${USRLIB_DIR}"
+	## On Mac use (instead of the above):
+	#cd htslib-1.7 && cp libhts.a "${USRLIB_DIR}"
+	cd "${USRLIB_DIR}" && ln -s libhts.so libhts.so.2
+
+include_dir: htslib
+	mkdir -p "${INCLUDE_DIR}"
+	cp htslib-1.7/htslib/* "${INCLUDE_DIR}"
 
 clean:
 	cd htslib-1.7 && $(MAKE) clean
