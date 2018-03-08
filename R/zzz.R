@@ -1,27 +1,27 @@
 pkgconfig <-
     function(opt = c("PKG_LIBS", "PKG_CPPFLAGS"))
 {
-    path <- Sys.getenv(
+    usrlib <- Sys.getenv(
         "RHTSLIB_RPATH",
-        system.file("lib", package="Rhtslib", mustWork=TRUE)
+        system.file("usrlib", package="Rhtslib", mustWork=TRUE)
     )
     if (nzchar(.Platform$r_arch)) {
         arch <- sprintf("/%s", .Platform$r_arch)
     } else {
         arch <- ""
     }
-    patharch <- paste0(path, arch)
+    usrlib_arch <- paste0(usrlib, arch)
 
     result <- switch(match.arg(opt), PKG_CPPFLAGS={
         sprintf('-I"%s"', system.file("include", package="Rhtslib"))
     }, PKG_LIBS={
         switch(Sys.info()['sysname'], Linux={
             sprintf('-L%s -Wl,-rpath,%s -lhts -lz -pthread',
-                    patharch, patharch)
+                    usrlib_arch, usrlib_arch)
         }, Darwin={
-            sprintf('%s/libhts.a -lz -pthread', patharch)
+            sprintf('%s/libhts.a -lz -pthread', usrlib_arch)
         }, Windows={
-            sprintf('-L"%s" -lhts -lz -pthread -lws2_32', patharch)
+            sprintf('-L"%s" -lhts -lz -pthread -lws2_32', usrlib_arch)
         }
     )})
 
