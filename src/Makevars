@@ -1,34 +1,52 @@
-## We do not configure htslib for now since default configuration seems
-## to work just fine.
-## See how htslib_default_libs is defined in htslib-1.7/Makefile. Make
-## sure to use the same value for the variable below.
+HTSLIB_SOURCE_DIR=htslib-1.7
+
+## We do NOT configure htslib for now since using the default configuration
+## (i.e. running 'make' directly in the htslib-1.7 folder without calling
+## ./configure first) seems to work just fine.
+## See how htslib_default_libs is defined in htslib-1.7/Makefile. Make sure
+## to use the same value for the variable below.
 htslib_default_libs=-lz -lm -lbz2 -llzma
+
+## Even though we should try to avoid using GNU 'make' extensions (for por-
+## tability), we use one here to detect the platform :-/ Is there a more
+## portable way to do this?
+platform := $(shell uname -s)
 
 USRLIB_DIR=${R_PACKAGE_DIR}/usrlib
 INCLUDE_DIR=${R_PACKAGE_DIR}/include
 
+## Preprocessor options. Keep Rhtslib::pkgconfig() function (defined in
+## R/zzz.R) in sync with this.
 PKG_CPPFLAGS=-I"${INCLUDE_DIR}"
-PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -pthread
-## On Mac use (instead of the above):
-#PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lcurl -lpthread
+
+## Linker options. Keep Rhtslib::pkgconfig() function (defined in R/zzz.R)
+## in sync with these values.
+ifeq (${platform},Darwin)
+	PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lcurl -lpthread
+else
+	PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -pthread
+endif
 
 all: usrlib_dir include_dir
 
 htslib:
-	#cd htslib-1.7 && ./configure && $(MAKE)
-	## We do not configure htslib for now. See comment at top of this file.
-	cd htslib-1.7 && $(MAKE)
+	#cd "${HTSLIB_SOURCE_DIR}" && ./configure && $(MAKE)
+	## We do not configure htslib for now. See comment at beginning of
+	## this file.
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE)
 
 usrlib_dir: htslib
 	mkdir -p "${USRLIB_DIR}"
-	cd htslib-1.7 && cp libhts.so libhts.a "${USRLIB_DIR}"
-	## On Mac use (instead of the above):
-	#cd htslib-1.7 && cp libhts.a "${USRLIB_DIR}"
+ifeq (${platform},Darwin)
+	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.a "${USRLIB_DIR}"
+else
+	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.so libhts.a "${USRLIB_DIR}"
 	cd "${USRLIB_DIR}" && ln -s libhts.so libhts.so.2
+endif
 
 include_dir: htslib
 	mkdir -p "${INCLUDE_DIR}"
-	cp htslib-1.7/htslib/* "${INCLUDE_DIR}"
+	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}"
 
 clean:
-	cd htslib-1.7 && $(MAKE) clean
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) clean
