@@ -12,7 +12,7 @@ PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs}
 all: usrlib_dir include_dir
 
 htslib:
-	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f Makefile.win
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${R_HOME}/etc${R_ARCH}/Makeconf" -f Makefile.win
 
 usrlib_dir: htslib
 	mkdir -p "${USRLIB_DIR}"
