@@ -1,23 +1,26 @@
-HTSDIR=./htslib
-HTSLIB_LIBDIR="${R_PACKAGE_DIR}/lib${R_ARCH}"
-HTSLIB_INCLUDEDIR="${R_PACKAGE_DIR}/include"
+HTSLIB_SOURCE_DIR=htslib-1.7
 
-.PHONY: all Rinstall
+htslib_default_libs=-lz -lm -lws2_32
 
-all: $(SHLIB)
+USRLIB_DIR="${R_PACKAGE_DIR}/usrlib${R_ARCH}"
+INCLUDE_DIR="${R_PACKAGE_DIR}/include"
 
-$(SHLIB): Rhtslib.o
+PKG_CPPFLAGS=-I"${INCLUDE_DIR}"
 
-Rhtslib.o: Rinstall
+PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs}
 
-# always run so we never skip copying library & headers into
-# destination; otherwise, a user could R CMD INSTALL Rhtslib, then
-# subsequently remove the package, then try R CMD INSTALL Rhtslib
-# again--in which case the library and headers would not be
-# reinstalled
-Rinstall:
-	@mkdir -p $(HTSLIB_LIBDIR) $(HTSLIB_INCLUDEDIR)
-	cp "winlib$(R_ARCH)/libhts.a" $(HTSLIB_LIBDIR)/libhts.a
-	cp $(HTSLIB_PUBLIC_HEADERS) "$(HTSLIB_INCLUDEDIR)"
+all: usrlib_dir include_dir
 
-include $(HTSDIR)/htslib.mk
+htslib:
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f Makefile.win
+
+usrlib_dir: htslib
+	mkdir -p "${USRLIB_DIR}"
+	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.a "${USRLIB_DIR}"
+
+include_dir: htslib
+	mkdir -p "${INCLUDE_DIR}"
+	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}"
+
+clean:
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) clean

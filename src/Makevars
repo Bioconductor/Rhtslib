@@ -12,8 +12,8 @@ htslib_default_libs=-lz -lm -lbz2 -llzma
 ## portable way to do this?
 platform := $(shell uname -s)
 
-USRLIB_DIR=${R_PACKAGE_DIR}/usrlib
-INCLUDE_DIR=${R_PACKAGE_DIR}/include
+USRLIB_DIR="${R_PACKAGE_DIR}/usrlib"
+INCLUDE_DIR="${R_PACKAGE_DIR}/include"
 
 ## Preprocessor options. Keep Rhtslib::pkgconfig() function (defined in
 ## R/zzz.R) in sync with this.
