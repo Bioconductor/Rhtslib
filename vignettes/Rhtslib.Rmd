@@ -1,7 +1,7 @@
 ---
 title: "Motivation and use of _Rhtslib_"
 author: "Nathaniel Hayden, Martin Morgan"
-date: "Compiled `r doc_date()`;  Modified 8 March 2018"
+date: "Compiled `r doc_date()`;  Modified 12 March 2018"
 package: "`r pkg_ver('Rhtslib')`"
 abstract: >
   This package provides version 1.7 of the 'HTSlib' C library for
@@ -88,7 +88,7 @@ to the `PKG_LIBS=$(RHTSLIB_LIBS)` line, e.g.,
 
 The Linux implementation embeds the location of the hts library in the
 Rhtslib shared object via the compiler flag `-Wl,rpath,path`, where
-path is determined by `system.file("lib", package="Rhtslib")`. The
+path is determined by `system.file("usrlib", package="Rhtslib")`. The
 path determined by `system.file()` is from `.libPaths()`, and has
 resolved symbolic links to their actual path. This can cause problems,
 e.g., when the 'head' node of a cluster mimicks the cluster node via a
