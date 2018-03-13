@@ -1,39 +1,38 @@
 pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
 {
-    usrlib <- Sys.getenv(
-        "RHTSLIB_RPATH",
-        system.file("usrlib", package="Rhtslib", mustWork=TRUE)
-    )
-    if (nzchar(.Platform$r_arch)) {
-        arch <- sprintf("/%s", .Platform$r_arch)
+    opt <- match.arg(opt)
+    if (opt == "PKG_LIBS") {
+        usrlib_dir <- Sys.getenv(
+            "RHTSLIB_RPATH",
+            system.file("usrlib", package="Rhtslib", mustWork=TRUE)
+        )
+        platform <- Sys.info()[["sysname"]]
+        if (platform == "Windows") {
+            usrlib_dir <- sprintf("%s/%s", usrlib_dir, .Platform[["r_arch"]])
+            ## See how 'htslib_default_libs' is defined in
+            ## htslib-1.7/Makefile.Rhtslib.win and make sure
+            ## to use the same value here.
+            htslib_default_libs <- "-lz -lm -lws2_32"
+            config <- sprintf('-L"%s" -lhts %s -lpthread',
+                              usrlib_dir, htslib_default_libs)
+        } else {
+            ## See how 'htslib_default_libs' is defined in
+            ## htslib-1.7/Makefile.Rhtslib and make sure
+            ## to use the same value here.
+            htslib_default_libs <- "-lz -lm -lbz2 -llzma"
+            if (platform == "Darwin") {
+                config <- sprintf('%s/libhts.a %s -lcurl -lpthread',
+                                  usrlib_dir, htslib_default_libs)
+            } else {
+                config <- sprintf('-L%s -Wl,-rpath,%s -lhts %s -lpthread',
+                                  usrlib_dir, usrlib_dir, htslib_default_libs)
+            }
+        }
     } else {
-        arch <- ""
+        include_dir <- system.file("include", package="Rhtslib")
+        config <- sprintf('-I"%s"', include_dir)
     }
-    usrlib_arch <- paste0(usrlib, arch)
-
-    ## Same as htslib_default_libs variable defined in htslib-1.7/Makefile:
-    htslib_default_libs <- "-lz -lm -lbz2 -llzma"
-
-    result <- switch(match.arg(opt),
-        PKG_CPPFLAGS={
-            sprintf('-I"%s"', system.file("include", package="Rhtslib"))
-        },
-        PKG_LIBS={
-            switch(Sys.info()[["sysname"]],
-                Linux={
-                    sprintf('-L%s -Wl,-rpath,%s -lhts %s -pthread',
-                            usrlib_arch, usrlib_arch, htslib_default_libs)
-                },
-                Darwin={
-                    sprintf('%s/libhts.a %s -lcurl -lpthread',
-                            usrlib_arch, htslib_default_libs)
-                },
-                Windows={
-                    sprintf('-L"%s" -lhts -lz -pthread -lws2_32', usrlib_arch)
-                })
-        })
-
-    cat(result)
+    cat(config)
 }
 
 htsVersion <- function()

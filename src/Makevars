@@ -3,8 +3,8 @@ HTSLIB_SOURCE_DIR=htslib-1.7
 ## We do NOT configure htslib for now since using the default configuration
 ## (i.e. running 'make' directly in the htslib-1.7 folder without calling
 ## ./configure first) seems to work just fine.
-## See how htslib_default_libs is defined in htslib-1.7/Makefile. Make sure
-## to use the same value for the variable below.
+## See how 'htslib_default_libs' is defined in htslib-1.7/Makefile.Rhtslib
+## and make sure to use the same value here.
 htslib_default_libs=-lz -lm -lbz2 -llzma
 
 ## Even though we should try to avoid using GNU 'make' extensions (for por-
@@ -12,8 +12,8 @@ htslib_default_libs=-lz -lm -lbz2 -llzma
 ## portable way to do this?
 platform := $(shell uname -s)
 
-USRLIB_DIR="${R_PACKAGE_DIR}/usrlib"
-INCLUDE_DIR="${R_PACKAGE_DIR}/include"
+USRLIB_DIR=${R_PACKAGE_DIR}/usrlib
+INCLUDE_DIR=${R_PACKAGE_DIR}/include
 
 ## Preprocessor options. Keep Rhtslib::pkgconfig() function (defined in
 ## R/zzz.R) in sync with this.
@@ -24,16 +24,13 @@ PKG_CPPFLAGS=-I"${INCLUDE_DIR}"
 ifeq (${platform},Darwin)
 	PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lcurl -lpthread
 else
-	PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -pthread
+	PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -lpthread
 endif
 
 all: usrlib_dir include_dir
 
 htslib:
-	#cd "${HTSLIB_SOURCE_DIR}" && ./configure && $(MAKE)
-	## We do not configure htslib for now. See comment at beginning of
-	## this file.
-	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE)
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${R_HOME}/etc/Makeconf" -f Makefile.Rhtslib
 
 usrlib_dir: htslib
 	mkdir -p "${USRLIB_DIR}"
@@ -49,4 +46,4 @@ include_dir: htslib
 	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}"
 
 clean:
-	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) clean
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f Makefile.Rhtslib clean

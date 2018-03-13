@@ -1,5 +1,5 @@
-# This is Makefile.win, a modified version of Makefile to build htslib
-# on Windows.
+# This is Makefile.Rhtslib.win, a lightly modified version of Makefile to build
+# htslib in the context of 'R CMD INSTALL Rhtslib' on Windows.
 # Author of original Makefile: John Marshall (see Copyright below)
 # Modified by: Hervé Pagès (March 2018)
 # ----------------------------------------------------------------------------
@@ -29,7 +29,7 @@
 
 # CC, AR, and RANLIB will be set to the values defined in
 # ${R_HOME}/etc${R_ARCH}/Makeconf when we call make with:
-#     make -f "${R_HOME}/etc${R_ARCH}/Makeconf" -f Makefile.win
+#     make -f "${R_HOME}/etc${R_ARCH}/Makeconf" -f Makefile.Rhtslib.win
 #CC     = gcc
 #AR     = ar
 #RANLIB = ranlib

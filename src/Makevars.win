@@ -2,17 +2,17 @@ HTSLIB_SOURCE_DIR=htslib-1.7
 
 htslib_default_libs=-lz -lm -lws2_32
 
-USRLIB_DIR="${R_PACKAGE_DIR}/usrlib${R_ARCH}"
-INCLUDE_DIR="${R_PACKAGE_DIR}/include"
+USRLIB_DIR=${R_PACKAGE_DIR}/usrlib${R_ARCH}
+INCLUDE_DIR=${R_PACKAGE_DIR}/include
 
 PKG_CPPFLAGS=-I"${INCLUDE_DIR}"
 
-PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs}
+PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lpthread
 
 all: usrlib_dir include_dir
 
 htslib:
-	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${R_HOME}/etc${R_ARCH}/Makeconf" -f Makefile.win
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${R_HOME}/etc${R_ARCH}/Makeconf" -f Makefile.Rhtslib.win
 
 usrlib_dir: htslib
 	mkdir -p "${USRLIB_DIR}"
@@ -23,4 +23,4 @@ include_dir: htslib
 	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}"
 
 clean:
-	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) clean
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f Makefile.Rhtslib.win clean
