@@ -1,0 +1,22 @@
+HTSLIB_SOURCE_DIR=htslib-1.7
+
+INCLUDE_DIR=${R_PACKAGE_DIR}/include
+
+## Preprocessor options. Keep Rhtslib::pkgconfig() function (defined in
+## R/zzz.R) in sync with this.
+PKG_CPPFLAGS=-I"${INCLUDE_DIR}"
+
+.PHONY: all htslib usrlib_dir include_dir clean
+
+all: usrlib_dir include_dir
+
+htslib:
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${R_ETC_MAKECONF}" -f "${HTSLIB_MAKEFILE}"
+
+include_dir: htslib
+	mkdir -p "${INCLUDE_DIR}"
+	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}"
+
+clean:
+	echo "cleaning"
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${HTSLIB_MAKEFILE}" clean
