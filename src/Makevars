@@ -1,32 +1,33 @@
 include Makevars.common
 
-R_ETC_MAKECONF=${R_HOME}/etc/Makeconf
 HTSLIB_MAKEFILE=Makefile.Rhtslib
 
 ## See how 'htslib_default_libs' is defined in htslib-1.7/Makefile.Rhtslib
 ## and make sure to use the same value here.
 htslib_default_libs=-lz -lm -lbz2 -llzma
 
-USRLIB_DIR=${R_PACKAGE_DIR}/usrlib
-
 ## Even though we should try to avoid using GNU 'make' extensions (for por-
 ## tability), we use one here to detect the platform :-/ Is there a more
 ## portable way to do this?
 platform := $(shell uname -s)
 
+ifeq (${platform},Darwin)
+
 ## Linker options. Make sure to keep Rhtslib::pkgconfig() function (defined
 ## in R/zzz.R) in sync with this.
-ifeq (${platform},Darwin)
-	PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lcurl -lpthread
-else
-	PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -lpthread
-endif
+PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lcurl -lpthread
 
-usrlib_dir: htslib
-	mkdir -p "${USRLIB_DIR}"
-ifeq (${platform},Darwin)
+install-usrlib-stuff: htslib "${USRLIB_DIR}"
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.a "${USRLIB_DIR}"
+
 else
+
+## Linker options. Make sure to keep Rhtslib::pkgconfig() function (defined
+## in R/zzz.R) in sync with this.
+PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -lpthread
+
+install-usrlib-stuff: htslib "${USRLIB_DIR}"
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.so libhts.a "${USRLIB_DIR}"
 	cd "${USRLIB_DIR}" && ln -s libhts.so libhts.so.2
+
 endif

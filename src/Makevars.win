@@ -1,18 +1,14 @@
 include Makevars.common
 
-R_ETC_MAKECONF=${R_HOME}/etc${R_ARCH}/Makeconf
 HTSLIB_MAKEFILE=Makefile.Rhtslib.win
 
 ## See how 'htslib_default_libs' is defined in htslib-1.7/Makefile.Rhtslib.win
 ## and make sure to use the same value here.
 htslib_default_libs=-lz -lm -lws2_32
 
-USRLIB_DIR=${R_PACKAGE_DIR}/usrlib${R_ARCH}
-
 ## Linker options. Make sure to keep Rhtslib::pkgconfig() function (defined
 ## in R/zzz.R) in sync with this.
 PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lpthread
 
-usrlib_dir: htslib
-	mkdir -p "${USRLIB_DIR}"
+install-usrlib-stuff: htslib "${USRLIB_DIR}"
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.a "${USRLIB_DIR}"
