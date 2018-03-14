@@ -10,5 +10,5 @@ htslib_default_libs=-lz -lm -lws2_32
 ## in R/zzz.R) in sync with this.
 PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lpthread
 
-install-usrlib-stuff: htslib mk_usrlib_dir
+populate-usrlib-dir: htslib mk-usrlib-dir
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.a "${USRLIB_DIR}"
