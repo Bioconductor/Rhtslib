@@ -17,7 +17,7 @@ ifeq (${platform},Darwin)
 ## in R/zzz.R) in sync with this.
 PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lcurl -lpthread
 
-install-usrlib-stuff: htslib "${USRLIB_DIR}"
+install-usrlib-stuff: htslib mk_usrlib_dir
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.a "${USRLIB_DIR}"
 
 else
@@ -26,7 +26,7 @@ else
 ## in R/zzz.R) in sync with this.
 PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -lpthread
 
-install-usrlib-stuff: htslib "${USRLIB_DIR}"
+install-usrlib-stuff: htslib mk_usrlib_dir
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.so libhts.a "${USRLIB_DIR}"
 	cd "${USRLIB_DIR}" && ln -s libhts.so libhts.so.2
 

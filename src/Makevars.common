@@ -9,20 +9,20 @@ R_ETC_MAKECONF=${R_HOME}/etc${R_ARCH}/Makeconf
 ## R/zzz.R) in sync with this.
 PKG_CPPFLAGS=-I"${INCLUDE_DIR}"
 
-.PHONY: all htslib install-usrlib-stuff install-include-stuff clean
+.PHONY: all htslib mk_include_dir mk_usrlib_dir install-include-stuff install-usrlib-stuff clean
 
 all: install-usrlib-stuff install-include-stuff
 
 htslib:
 	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${R_ETC_MAKECONF}" -f "${HTSLIB_MAKEFILE}"
 
-"${INCLUDE_DIR}":
+mk_include_dir:
 	mkdir -p "${INCLUDE_DIR}"
 
-"${USRLIB_DIR}":
+mk_usrlib_dir:
 	mkdir -p "${USRLIB_DIR}"
 
-install-include-stuff: htslib "${INCLUDE_DIR}"
+install-include-stuff: htslib mk_include_dir
 	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}"
 
 clean:
