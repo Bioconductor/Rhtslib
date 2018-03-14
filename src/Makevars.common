@@ -18,5 +18,4 @@ include_dir: htslib
 	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}"
 
 clean:
-	echo "cleaning"
 	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${HTSLIB_MAKEFILE}" clean
