@@ -11,7 +11,11 @@ PKG_CPPFLAGS=-I"${INCLUDE_DIR}"
 
 .PHONY: all htslib mk-include-dir mk-usrlib-dir populate-include-dir populate-usrlib-dir clean
 
-all: populate-usrlib-dir populate-include-dir
+all: Rhtslib.so
+
+Rhtslib.so: populate-usrlib-dir R_init_Rhtslib.o
+
+R_init_Rhtslib.o: populate-include-dir
 
 htslib:
 	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${R_ETC_MAKECONF}" -f "${HTSLIB_MAKEFILE}"
