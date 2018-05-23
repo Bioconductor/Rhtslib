@@ -109,8 +109,8 @@ Note that as of R 3.0.2 `LinkingTo` values can include version
 specifications, e.g., `LinkingTo: Rhtslib (>= 0.99.10)`.
     
 In C or C++ code files, use standard techniques, e.g., `#include
-"hts.h"`. Header files are available for perusal at (enter in an R
-session)
+"htslib/hts.h"`. Header files are available for perusal at (enter
+in an R session)
 
 ```{R headers}
 system.file(package="Rhtslib", "include")
