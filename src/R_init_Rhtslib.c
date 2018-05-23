@@ -1,5 +1,5 @@
 #include <Rinternals.h>
-#include "hts.h"
+#include "htslib/hts.h"
 
 SEXP Rhtslib_htslib_version()
 {

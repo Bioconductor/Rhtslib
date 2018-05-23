@@ -21,13 +21,13 @@ htslib:
 	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${R_ETC_MAKECONF}" -f "${HTSLIB_MAKEFILE}"
 
 mk-include-dir:
-	mkdir -p "${INCLUDE_DIR}"
+	mkdir -p "${INCLUDE_DIR}/htslib"
 
 mk-usrlib-dir:
 	mkdir -p "${USRLIB_DIR}"
 
 populate-include-dir: htslib mk-include-dir
-	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}"
+	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}/htslib"
 
 clean:
 	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${HTSLIB_MAKEFILE}" clean
