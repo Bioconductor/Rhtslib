@@ -1,0 +1,4 @@
+The HTSlib header files will end up in ${R_PACKAGE_DIR}/include/htslib after
+installation. For convenience, some .h and .c files from Samtools are also
+included here, in ${R_PACKAGE_DIR}/include. These files come from the top-level
+folder of the Samtools 1.7 source tree.

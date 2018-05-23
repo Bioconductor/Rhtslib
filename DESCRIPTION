@@ -15,14 +15,13 @@ Description: This package provides version 1.7 of the 'HTSlib' C
     make use of HTSlib. Motivation and instructions for use of this
     package are in the vignette, vignette(package="Rhtslib", "Rhtslib").
 License: LGPL (>= 2)
-Copyright: Unless otherwise noted in the file, all files outisde
-    src/htslib copyright Bioconductor; for files inside src/htslib,
-    see file src/htslib/LICENSE.
-LazyLoad: yes
+Copyright: Unless otherwise noted in the file, all files outside
+    src/htslib-1.7 and inst/include copyright Bioconductor; for files
+    inside src/htslib-1.7 or inst/include, see file src/htslib/LICENSE.
 Imports: zlibbioc
 LinkingTo: zlibbioc
 Suggests: BiocStyle, knitr
 VignetteBuilder: knitr
-URL: https://github.com/nhayden/Rhtslib, http://www.htslib.org/
-BugReports: https://github.com/nhayden/Rhtslib
-biocViews: DataImport,  Sequencing
+URL: https://github.com/Bioconductor/Rhtslib, http://www.htslib.org/
+BugReports: https://github.com/Bioconductor/Rhtslib
+biocViews: DataImport, Sequencing
