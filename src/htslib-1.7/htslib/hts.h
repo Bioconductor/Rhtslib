@@ -636,7 +636,7 @@ int hts_idx_set_meta(hts_idx_t *idx, uint32_t l_meta, uint8_t *meta, int is_copy
 
     int hts_idx_get_stat(const hts_idx_t* idx, int tid, uint64_t* mapped, uint64_t* unmapped);
     uint64_t hts_idx_get_n_no_coor(const hts_idx_t* idx);
-
+    int32_t hts_idx_get_n(const hts_idx_t* idx);  // -- by H.P.
 
 #define HTS_PARSE_THOUSANDS_SEP 1  ///< Ignore ',' separators within numbers
 

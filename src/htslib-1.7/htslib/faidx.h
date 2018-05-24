@@ -136,7 +136,7 @@ by end users by calling `free()` on it.
 */
 char *faidx_fetch_seq(const faidx_t *fai, const char *c_name, int p_beg_i, int p_end_i, int *len);
 
-/// Alternative to faidx_fetch_seq() -- by HP
+/// Alternative to faidx_fetch_seq() -- by H.P.
 /** @param  fai  Pointer to the faidx_t struct
     @param  c_name Region name
     @param  p_beg_i  Beginning position number (zero-based)

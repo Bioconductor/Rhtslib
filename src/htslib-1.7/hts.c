@@ -1932,6 +1932,11 @@ uint64_t hts_idx_get_n_no_coor(const hts_idx_t* idx)
     return idx->n_no_coor;
 }
 
+int32_t hts_idx_get_n(const hts_idx_t* idx)                        /* H.P. */
+{                                                                  /* H.P. */
+    return idx->n;                                                 /* H.P. */
+}                                                                  /* H.P. */
+
 /****************
  *** Iterator ***
  ****************/

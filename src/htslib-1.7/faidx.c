@@ -586,57 +586,57 @@ char *faidx_fetch_seq(const faidx_t *fai, const char *c_name, int p_beg_i, int p
 }
 
 /*
- * HP: Like faidx_fetch_seq() above but:
- * HP:   1) writes the incoming sequence to user-supplied 'out' buffer,
- * HP:   2) doesn't write the terminating null byte ('\0'),
- * HP:   3) properly handles 0-length sequences,
- * HP:   4) returns the number of bytes written; -1 on failure.
+ * H.P.: Like faidx_fetch_seq() above but:
+ * H.P.:   1) writes the incoming sequence to user-supplied 'out' buffer,
+ * H.P.:   2) doesn't write the terminating null byte ('\0'),
+ * H.P.:   3) properly handles 0-length sequences,
+ * H.P.:   4) returns the number of bytes written; -1 on failure.
  */
-int faidx_fetch_seq2(const faidx_t *fai,                           /* HP */
-                     const char *c_name, int p_beg_i, int p_end_i, /* HP */
-                     char *out)                                    /* HP */
-{                                                                  /* HP */
-    int l;                                                         /* HP */
-    int c;                                                         /* HP */
-    khiter_t iter;                                                 /* HP */
-    faidx1_t val;                                                  /* HP */
-    int64_t offset;                                                /* HP */
-                                                                   /* HP */
-    // Adjust position                                             /* HP */
-    iter = kh_get(s, fai->hash, c_name);                           /* HP */
-    if(iter == kh_end(fai->hash))                                  /* HP */
-        return -1;                                                 /* HP */
-    val = kh_value(fai->hash, iter);                               /* HP */
-    if(p_end_i < p_beg_i - 1) p_end_i = p_beg_i - 1;               /* HP */
-    if(p_beg_i < 0) p_beg_i = 0;                                   /* HP */
-    else if(val.len <= p_beg_i) p_beg_i = val.len - 1;             /* HP */
-    if(p_end_i < 0) p_end_i = 0;                                   /* HP */
-    else if(val.len <= p_end_i) p_end_i = val.len - 1;             /* HP */
-                                                                   /* HP */
-    // Now retrieve the sequence                                   /* HP */
-    l = 0;                                                         /* HP */
-    offset = (int64_t) val.offset +                                /* HP */
-             p_beg_i / val.line_blen * val.line_len +              /* HP */
-             p_beg_i % val.line_blen;                              /* HP */
-    int ret = bgzf_useek(fai->bgzf, offset, SEEK_SET);             /* HP */
-    if (ret < 0) {                                                 /* HP */
-        hts_log_error("Failed to retrieve block. (Seeking in "     /* HP */
-                      "a compressed, .gzi unindexed, file?)");     /* HP */
-        return -1;                                                 /* HP */
-    }                                                              /* HP */
-    while ((c = bgzf_getc(fai->bgzf)) >= 0 &&                      /* HP */
-           l < p_end_i - p_beg_i + 1)                              /* HP */
-    {                                                              /* HP */
-            if (isgraph(c)) out[l++] = c;                          /* HP */
-    }                                                              /* HP */
-    if (c < 0) {                                                   /* HP */
-        hts_log_error("Failed to retrieve block: %s",              /* HP */
-                      c == -1 ? "unexpected end of file"           /* HP */
-                              : "error reading file");             /* HP */
-        return -1;                                                 /* HP */
-    }                                                              /* HP */
-    return l;                                                      /* HP */
-}                                                                  /* HP */
+int faidx_fetch_seq2(const faidx_t *fai,                           /* H.P. */
+                     const char *c_name, int p_beg_i, int p_end_i, /* H.P. */
+                     char *out)                                    /* H.P. */
+{                                                                  /* H.P. */
+    int l;                                                         /* H.P. */
+    int c;                                                         /* H.P. */
+    khiter_t iter;                                                 /* H.P. */
+    faidx1_t val;                                                  /* H.P. */
+    int64_t offset;                                                /* H.P. */
+                                                                   /* H.P. */
+    // Adjust position                                             /* H.P. */
+    iter = kh_get(s, fai->hash, c_name);                           /* H.P. */
+    if(iter == kh_end(fai->hash))                                  /* H.P. */
+        return -1;                                                 /* H.P. */
+    val = kh_value(fai->hash, iter);                               /* H.P. */
+    if(p_end_i < p_beg_i - 1) p_end_i = p_beg_i - 1;               /* H.P. */
+    if(p_beg_i < 0) p_beg_i = 0;                                   /* H.P. */
+    else if(val.len <= p_beg_i) p_beg_i = val.len - 1;             /* H.P. */
+    if(p_end_i < 0) p_end_i = 0;                                   /* H.P. */
+    else if(val.len <= p_end_i) p_end_i = val.len - 1;             /* H.P. */
+                                                                   /* H.P. */
+    // Now retrieve the sequence                                   /* H.P. */
+    l = 0;                                                         /* H.P. */
+    offset = (int64_t) val.offset +                                /* H.P. */
+             p_beg_i / val.line_blen * val.line_len +              /* H.P. */
+             p_beg_i % val.line_blen;                              /* H.P. */
+    int ret = bgzf_useek(fai->bgzf, offset, SEEK_SET);             /* H.P. */
+    if (ret < 0) {                                                 /* H.P. */
+        hts_log_error("Failed to retrieve block. (Seeking in "     /* H.P. */
+                      "a compressed, .gzi unindexed, file?)");     /* H.P. */
+        return -1;                                                 /* H.P. */
+    }                                                              /* H.P. */
+    while ((c = bgzf_getc(fai->bgzf)) >= 0 &&                      /* H.P. */
+           l < p_end_i - p_beg_i + 1)                              /* H.P. */
+    {                                                              /* H.P. */
+            if (isgraph(c)) out[l++] = c;                          /* H.P. */
+    }                                                              /* H.P. */
+    if (c < 0) {                                                   /* H.P. */
+        hts_log_error("Failed to retrieve block: %s",              /* H.P. */
+                      c == -1 ? "unexpected end of file"           /* H.P. */
+                              : "error reading file");             /* H.P. */
+        return -1;                                                 /* H.P. */
+    }                                                              /* H.P. */
+    return l;                                                      /* H.P. */
+}                                                                  /* H.P. */
 
 int faidx_has_seq(const faidx_t *fai, const char *seq)
 {
