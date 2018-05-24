@@ -136,6 +136,21 @@ by end users by calling `free()` on it.
 */
 char *faidx_fetch_seq(const faidx_t *fai, const char *c_name, int p_beg_i, int p_end_i, int *len);
 
+/// Alternative to faidx_fetch_seq() -- by HP
+/** @param  fai  Pointer to the faidx_t struct
+    @param  c_name Region name
+    @param  p_beg_i  Beginning position number (zero-based)
+    @param  p_end_i  End position number (zero-based)
+    @param  out  User-supplied output buffer
+    @return      Number of bytes written; -1 on failure
+
+Differences with faidx_fetch_seq(): (1) writes the incoming sequence to
+user-supplied output buffer, (2) doesn't write the terminating null byte
+('\0'), (3) properly handles 0-length sequences, (4) returns the number of
+bytes written; -1 on failure.
+*/
+int faidx_fetch_seq2(const faidx_t *fai, const char *c_name, int p_beg_i, int p_end_i, char *out);
+
 /// Query if sequence is present
 /**   @param  fai  Pointer to the faidx_t struct
       @param  seq  Sequence name
