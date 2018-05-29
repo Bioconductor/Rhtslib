@@ -2,6 +2,8 @@ HTSLIB_SOURCE_DIR=htslib-1.7
 
 INCLUDE_DIR=${R_PACKAGE_DIR}/include
 USRLIB_DIR=${R_PACKAGE_DIR}/usrlib${R_ARCH}
+TESTDATA_DIR=${R_PACKAGE_DIR}/testdata
+TESTFILES=*.sam *.bam *.vcf *.bcf *.cram *.fa *.fa.fai *.gff *.bed
 
 R_ETC_MAKECONF=${R_HOME}/etc${R_ARCH}/Makeconf
 
@@ -9,9 +11,9 @@ R_ETC_MAKECONF=${R_HOME}/etc${R_ARCH}/Makeconf
 ## R/zzz.R) in sync with this.
 PKG_CPPFLAGS=-I"${INCLUDE_DIR}"
 
-.PHONY: all htslib mk-include-dir mk-usrlib-dir populate-include-dir populate-usrlib-dir clean
+.PHONY: all htslib mk-include-dir mk-usrlib-dir mk-testdata-dir populate-include-dir populate-usrlib-dir populate-testdata-dir clean
 
-all: Rhtslib.so
+all: Rhtslib.so populate-testdata-dir
 
 Rhtslib.so: populate-usrlib-dir R_init_Rhtslib.o
 
@@ -26,8 +28,14 @@ mk-include-dir:
 mk-usrlib-dir:
 	mkdir -p "${USRLIB_DIR}"
 
+mk-testdata-dir:
+	mkdir -p "${TESTDATA_DIR}/tabix"
+
 populate-include-dir: htslib mk-include-dir
 	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}/htslib"
+
+populate-testdata-dir: mk-testdata-dir
+	cd "${HTSLIB_SOURCE_DIR}/test" && (cp ${TESTFILES} "${TESTDATA_DIR}" 2>/dev/null || true) && (cd tabix && cp ${TESTFILES} "${TESTDATA_DIR}/tabix" 2>/dev/null || true)
 
 clean:
 	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${HTSLIB_MAKEFILE}" clean
