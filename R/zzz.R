@@ -16,14 +16,13 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
             config <- sprintf('-L"%s" -lhts %s -lpthread',
                               usrlib_dir, htslib_default_libs)
         } else {
-            ## See how 'htslib_default_libs' is defined in
-            ## htslib-1.7/Makefile.Rhtslib and make sure
-            ## to use the same value here.
-            htslib_default_libs <- "-lz -lm -lbz2 -llzma"
             if (platform == "Darwin") {
-                config <- sprintf('%s/libhts.a %s -lcurl -lpthread',
-                                  usrlib_dir, htslib_default_libs)
+                config <- sprintf('%s/libhts.a', usrlib_dir)
             } else {
+                ## See how 'htslib_default_libs' is defined in
+                ## htslib-1.7/Makefile.Rhtslib and make sure
+                ## to use the same value here.
+                htslib_default_libs <- "-lz -lm -lbz2 -llzma"
                 config <- sprintf('-L%s -Wl,-rpath,%s -lhts %s -lpthread',
                                   usrlib_dir, usrlib_dir, htslib_default_libs)
             }
