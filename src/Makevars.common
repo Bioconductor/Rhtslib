@@ -32,7 +32,7 @@ mk-testdata-dir:
 	mkdir -p "${TESTDATA_DIR}/tabix"
 
 populate-include-dir: htslib mk-include-dir
-	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}/htslib"
+	cd "${HTSLIB_SOURCE_DIR}/htslib" && cp * "${INCLUDE_DIR}/htslib" && cd .. && cp textutils_internal.h hts_internal.h "${INCLUDE_DIR}"
 
 populate-testdata-dir: mk-testdata-dir
 	cd "${HTSLIB_SOURCE_DIR}/test" && (cp ${TESTFILES} "${TESTDATA_DIR}" 2>/dev/null || true) && cd tabix && (cp ${TESTFILES} "${TESTDATA_DIR}/tabix" 2>/dev/null || true)
