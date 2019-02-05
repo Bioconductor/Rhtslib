@@ -1,6 +1,13 @@
-The HTSlib header files are located in src/htslib-1.7/htslib and are copied
-to ${R_PACKAGE_DIR}/include/htslib when the package gets installed.
+The HTSlib header files are located in src/htslib-1.7/htslib/ and will be copied
+to ${R_PACKAGE_DIR}/include/htslib/ at installation time. See the mk-include-dir
+and populate-include-dir targets in src/Makevars for how this mechanism is
+implemented.
+
 For convenience, some .h and .c files from Samtools are also included here
-and end up in ${R_PACKAGE_DIR}/include when the package gets installed.
-Note that these files come from the top-level folder of the Samtools 1.7
-source tree.
+and will end up in ${R_PACKAGE_DIR}/include/ at installation time. Note that
+these files come from the top-level folder of the Samtools 1.7 source tree.
+
+Finally, because recent versions of Samtools no longer support RAZF but some
+Bioconductor packages still need it (e.g. BSgenome, seqbias, etc...), we also
+include razf.c and razf.h from Samtools 0.1.19 in inst/include/razf
+
