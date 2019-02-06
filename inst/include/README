@@ -7,7 +7,3 @@ For convenience, some .h and .c files from Samtools are also included here
 and will end up in ${R_PACKAGE_DIR}/include/ at installation time. Note that
 these files come from the top-level folder of the Samtools 1.7 source tree.
 
-Finally, because recent versions of Samtools no longer support RAZF but some
-Bioconductor packages still need it (e.g. BSgenome, seqbias, etc...), we also
-include razf.c and razf.h from Samtools 0.1.19 in inst/include/razf
-
