@@ -151,6 +151,22 @@ bytes written; -1 on failure.
 */
 int faidx_fetch_seq2(const faidx_t *fai, const char *c_name, int p_beg_i, int p_end_i, char *out);
 
+/// Alternative to faidx_fetch_seq() -- originally by Daniel Jones (author of
+/// the seqbias package), moved to Rhtslib and ported to htslib-1.7 by H.P.
+/** @param  fai  Pointer to the faidx_t struct
+    @param  c_name Region name
+    @param  p_beg_i  Beginning position number (zero-based)
+    @param  p_end_i  End position number (zero-based)
+    @param  len  Length of the region; -2 if c_name not present, -1 general error
+    @return      Pointer to the sequence; null on failure
+
+The returned sequence is allocated by `malloc()` family and should be destroyed
+by end users by calling `free()` on it.
+Difference with faidx_fetch_seq(): if coordinates are outside the actual
+sequence, write N's, rather than adjusting the start,end.
+*/
+char *faidx_fetch_seq_forced_lower(const faidx_t *fai, const char *c_name, int p_beg_i, int p_end_i);
+
 /// Query if sequence is present
 /**   @param  fai  Pointer to the faidx_t struct
       @param  seq  Sequence name
