@@ -141,7 +141,7 @@ int kputd(double d, kstring_t *s) {
 int kvsprintf(kstring_t *s, const char *fmt, va_list ap)
 {
 	va_list args;
-	int l;
+	int l, need_to_resize;
 	va_copy(args, ap);
 
 	if (fmt[0] == '%' && fmt[1] == 'g' && fmt[2] == 0) {
@@ -153,7 +153,18 @@ int kvsprintf(kstring_t *s, const char *fmt, va_list ap)
 
 	l = vsnprintf(s->s + s->l, s->m - s->l, fmt, args); // This line does not work with glibc 2.0. See `man snprintf'.
 	va_end(args);
-	if (l + 1 > s->m - s->l) {
+/*
+ * H.P.: Turns out that vsnprintf() is buggy on Windows i.e. it returns -1 when
+ * H.P.: the output was truncated instead of the number of characters that
+ * H.P.: would have been written if n had been sufficiently large. Thanks to
+ * H.P.: Jiefei Wang <szwjf08@gmail.com> for identifying this vsnprintf() bug.
+ */
+#ifndef _WIN32                                                     /* H.P. */
+	need_to_resize = l + 1 > s->m - s->l;                      /* H.P. */
+#else                                                              /* H.P. */
+	need_to_resize = l == -1;                                  /* H.P. */
+#endif                                                             /* H.P. */
+	if (need_to_resize) {                                      /* H.P. */
 		if (ks_resize(s, s->l + l + 2) < 0)
 			return -1;
 		va_copy(args, ap);
