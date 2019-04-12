@@ -141,7 +141,7 @@ int kputd(double d, kstring_t *s) {
 int kvsprintf(kstring_t *s, const char *fmt, va_list ap)
 {
 	va_list args;
-	int l, increase;
+	int l;
 	va_copy(args, ap);
 
 	if (fmt[0] == '%' && fmt[1] == 'g' && fmt[2] == 0) {
@@ -153,31 +153,36 @@ int kvsprintf(kstring_t *s, const char *fmt, va_list ap)
 
 	l = vsnprintf(s->s + s->l, s->m - s->l, fmt, args); // This line does not work with glibc 2.0. See `man snprintf'.
 	va_end(args);
+	printf("kvsprintf(): s->m=%lu, s->l=%lu, l=%d\n", s->m, s->l, l);
 /*
  * H.P.: Turns out that vsnprintf() is buggy on Windows i.e. it returns -1 when
  * H.P.: the output was truncated instead of the number of characters that
  * H.P.: would have been written if n had been sufficiently large. Thanks to
  * H.P.: Jiefei Wang <szwjf08@gmail.com> for identifying this vsnprintf() bug.
  */
-#ifndef _WIN32
-	if (l + 1 > s->m - s->l) {
+	/* With glibc <= 2.0.6, vsnprintf() returns -1 when the output is
+	   truncated. */
+	if (l == -1) {
+		printf("kvsprintf(): NEED TO RESIZE s!\n");
+		int increase = 64;                                  /* H.P. */
+		do {                                                /* H.P. */
+			increase *= 2;                              /* H.P. */
+			if (ks_resize(s, s->m + increase) < 0)      /* H.P. */
+				return -1;                          /* H.P. */
+			va_copy(args, ap);                          /* H.P. */
+			l = vsnprintf(s->s + s->l, s->m - s->l, fmt, args); /* H.P. */
+			va_end(args);                               /* H.P. */
+			printf("kvsprintf(): s->m=%lu, s->l=%lu, l=%d\n", s->m, s->l, l);
+		} while (l == -1 || l + 1 > s->m - s->l);           /* H.P. */
+	} else if (l + 1 > s->m - s->l) {
+		printf("kvsprintf(): NEED TO RESIZE s!\n");
 		if (ks_resize(s, s->l + l + 2) < 0)
 			return -1;
 		va_copy(args, ap);
 		l = vsnprintf(s->s + s->l, s->m - s->l, fmt, args);
 		va_end(args);
+		printf("kvsprintf(): s->m=%lu, s->l=%lu, l=%d\n", s->m, s->l, l);
 	}
-#else
-	increase = 64;                                              /* H.P. */
-	while (l == -1) {                                           /* H.P. */
-		increase *= 2;                                      /* H.P. */
-		if (ks_resize(s, s->m + increase) < 0)              /* H.P. */
-			return -1;                                  /* H.P. */
-		va_copy(args, ap);                                  /* H.P. */
-		l = vsnprintf(s->s + s->l, s->m - s->l, fmt, args); /* H.P. */
-		va_end(args);                                       /* H.P. */
-	}                                                           /* H.P. */
-#endif
 	s->l += l;
 	return l;
 }
