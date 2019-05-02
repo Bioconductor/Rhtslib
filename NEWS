@@ -1,3 +1,90 @@
+CHANGES IN VERSION 1.16.0
+-------------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o Include various additional files from Samtools 1.7: bam_aux.c,
+      bam_endian.h, and bam_cat.c
+
+    o Add C function faidx_fetch_seq_forced_lower() to the HTSlib code.
+      This is an alternative to HTSlib C function faidx_fetch_seq(), with the
+      following difference: if coordinates are outside the actual sequence,
+      write N's, rather than adjusting the start,end.
+      Used in the seqbias package (and originally written by seqbias' author
+      and maintainer, Daniel Jones).
+
+BUG FIXES
+
+    o Fix long-standing kvsprintf() bug on Windows. This low-level bug was
+      responsible for breaking "scan_bcf_header" .Call entry point in
+      Rsamtools, which in turn was responsible for the infamous
+      'invalid class "VCFHeader" object' bug in VariantAnnotation::readVcf().
+
+    o Fix for Solaris: Do not build standalone executables (e.g. bgzip, tabix,
+      etc...). They're not needed and seem to cause problems on Solaris.
+
+
+CHANGES IN VERSION 1.14.0
+-------------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o Include the test data files from htslib-1.7/test
+      For convenience, the .sam, .bam, .vcf, .bcf, .cram, .fa, .fa.fai, .gff,
+      and .bed files located under htslib-1.7/test now are also included in
+      the package (under ${R_PACKAGE_DIR}/testdata). They can be accessed with
+      something like:
+          system.file(package="Rhtslib", "testdata", "ce#1.sam")
+      or:
+          system.file(package="Rhtslib", "testdata", "tabix", "vcf_file.vcf")
+
+    o Change installation folder of htslib header files. HTSlib header files
+      now get installed in ${R_PACKAGE_DIR}/include/htslib instead of
+      ${R_PACKAGE_DIR}/include so C/C++ code that needs to include them
+      now should use directives like:
+
+          #include "htslib/hts.h"
+          #include "htslib/sam.h"
+          #include "htslib/bgzf.h"
+
+      instead of:
+
+          #include "hts.h"
+          #include "sam.h"
+          #include "bgzf.h"
+
+    o Include various .h and .c files from Samtools 1.7 (in
+      ${R_PACKAGE_DIR}/include). These files come from the top-level folder
+      of the Samtools source tree. See Rhtslib/inst/include/README for more
+      information.
+
+    o Include textutils_internal.h and hts_internal.h from HTSlib 1.7 (in
+      ${R_PACKAGE_DIR}/include). These files come from the top-level folder
+      of the HTSlib source tree.
+
+    o Add C function faidx_fetch_seq2() to the HTSlib code. This is an
+      alternative to HTSlib C function faidx_fetch_seq(), with the following
+      differences:
+        1) writes the incoming sequence to user-supplied 'out' buffer,
+        2) doesn't write the terminating null byte ('\0'),
+        3) properly handles 0-length sequences,
+        4) returns the number of bytes written; -1 on failure.
+      It will be used in Rsamtools::scanFa() when Rsamtools gets migrated
+      to Rhtslib. It allows the incoming sequences to be loaded directly
+      into the DNAStringSet object to return.
+
+    o Add C function hts_idx_get_n() to the HTSlib code. This function will
+      be used in Rsamtools::idxstatsBam() when Rsamtools gets migrated
+      to Rhtslib.
+
+BUG FIXES
+
+    o Simplify PKG_LIBS on Mac. There should be no need to use linker options
+      -lz -lm -lbz2 -llzma -lcurl and -lpthread on Mac when making the package
+      shared object because we link against **static** library libhts.a on
+      this platform.
+
+
 CHANGES IN VERSION 1.12.0
 -------------------------
 
