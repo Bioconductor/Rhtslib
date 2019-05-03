@@ -1,7 +1,7 @@
 ---
 title: "Motivation and use of _Rhtslib_"
 author: "Nathaniel Hayden, Martin Morgan"
-date: "Compiled `r doc_date()`;  Modified 12 March 2018"
+date: "Compiled `r doc_date()`;  Modified 3 May 2019"
 package: "`r pkg_ver('Rhtslib')`"
 abstract: >
   This package provides version 1.7 of the 'HTSlib' C library for
@@ -86,15 +86,20 @@ to the `PKG_LIBS=$(RHTSLIB_LIBS)` line, e.g.,
 
     PKG_LIBS=$(RHTSLIB_LIBS) -L/path/to/foolib -lfoo
 
-The Linux implementation embeds the location of the hts library in the
-Rhtslib shared object via the compiler flag `-Wl,rpath,path`, where
-path is determined by `system.file("usrlib", package="Rhtslib")`. The
-path determined by `system.file()` is from `.libPaths()`, and has
-resolved symbolic links to their actual path. This can cause problems,
-e.g., when the 'head' node of a cluster mimicks the cluster node via a
-symbolic link to the directory in which Rhtslib is installed. Use the
-environment variable `RHTSLIB_RPATH` to resolve this by setting it to
-the cluster-node accessible path.
+[comment]: # H.P. - May 3, 2019: We've switched to static linking on
+[comment]: # Linux so this is no longer relevant.
+[comment]: #
+[comment]: # The Linux implementation embeds the location of the hts
+[comment]: # library in the Rhtslib shared object via the compiler
+[comment]: # flag `-Wl,rpath,path`, where path is determined by
+[comment]: # `system.file("usrlib", package="Rhtslib")`. The
+[comment]: # path determined by `system.file()` is from `.libPaths()`,
+[comment]: # and has resolved symbolic links to their actual path.
+[comment]: # This can cause problems, e.g., when the 'head' node of
+[comment]: # a cluster mimicks the cluster node via a symbolic link to
+[comment]: # the directory in which Rhtslib is installed. Use the
+[comment]: # environment variable `RHTSLIB_RPATH` to resolve this by
+[comment]: # setting it to the cluster-node accessible path.
 
 ## Find headers
 

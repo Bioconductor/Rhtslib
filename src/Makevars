@@ -24,7 +24,8 @@ htslib_default_libs=-lz -lm -lbz2 -llzma
 
 ## Linker options. Make sure to keep Rhtslib::pkgconfig() function (defined
 ## in R/zzz.R) in sync with this.
-PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -lpthread
+#PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -lpthread
+PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lpthread
 
 populate-usrlib-dir: htslib mk-usrlib-dir
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.so libhts.a "${USRLIB_DIR}"

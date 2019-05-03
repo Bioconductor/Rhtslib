@@ -23,8 +23,26 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
                 ## htslib-1.7/Makefile.Rhtslib and make sure
                 ## to use the same value here.
                 htslib_default_libs <- "-lz -lm -lbz2 -llzma"
-                config <- sprintf('-L%s -Wl,-rpath,%s -lhts %s -lpthread',
-                                  usrlib_dir, usrlib_dir, htslib_default_libs)
+
+                ## Dynamic linking seems to cause problems on some Linux
+                ## systems. See https://support.bioconductor.org/p/120529/
+                ## Mike's fix is to use linker option --disable-new-dtags:
+                ##   https://github.com/Bioconductor/Rhtslib/pull/5
+                ## Another way to go is to just link statically.
+
+                ## Cause problems on some Linux systems:
+                #config <- sprintf('-L%s -Wl,-rpath,%s -lhts %s -lpthread',
+                #                  usrlib_dir, usrlib_dir, htslib_default_libs)
+
+                ## Using linker option --disable-new-dtags seems to solve
+                ## the problem:
+                #config <- sprintf('-L%s %s -Wl,-rpath,%s -lhts %s -lpthread',
+                #                  usrlib_dir, "-Wl,--disable-new-dtags",
+                #                  usrlib_dir, htslib_default_libs)
+
+                ## However, static linking is probably safer:
+                config <- sprintf('%s/libhts.a %s -lpthread',
+                                  usrlib_dir, htslib_default_libs)
             }
         }
     } else {
