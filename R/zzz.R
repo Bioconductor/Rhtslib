@@ -23,7 +23,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
                 ## htslib-1.7/Makefile.Rhtslib and make sure
                 ## to use the same value here.
                 htslib_default_libs <- "-lz -lm -lbz2 -llzma"
-                config <- sprintf('-L%s -Wl,-rpath,%s -lhts %s -lpthread',
+                config <- sprintf('-L%s -Wl,--disable-new-dtags -Wl,-rpath,%s -lhts %s -lpthread',
                                   usrlib_dir, usrlib_dir, htslib_default_libs)
             }
         }
