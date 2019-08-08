@@ -9,23 +9,10 @@ platform := $(shell uname -s)
 
 ifeq (${platform},Darwin)
 
-## Linker options. Make sure to keep Rhtslib::pkgconfig() function (defined
-## in R/zzz.R) in sync with this.
-PKG_LIBS="${USRLIB_DIR}/libhts.a"
-
 populate-usrlib-dir: htslib mk-usrlib-dir
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.a "${USRLIB_DIR}"
 
 else
-
-## See how 'htslib_default_libs' is defined in htslib-1.7/Makefile.Rhtslib
-## and make sure to use the same value here.
-htslib_default_libs=-lz -lm -lbz2 -llzma -lcurl
-
-## Linker options. Make sure to keep Rhtslib::pkgconfig() function (defined
-## in R/zzz.R) in sync with this.
-#PKG_LIBS=-L"${USRLIB_DIR}" -Wl,-rpath,"${USRLIB_DIR}" -lhts ${htslib_default_libs} -lpthread
-PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lpthread
 
 populate-usrlib-dir: htslib mk-usrlib-dir
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.so libhts.a "${USRLIB_DIR}"

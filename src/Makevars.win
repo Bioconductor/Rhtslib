@@ -2,13 +2,5 @@ include Makevars.common
 
 HTSLIB_MAKEFILE=Makefile.Rhtslib.win
 
-## See how 'htslib_default_libs' is defined in htslib-1.7/Makefile.Rhtslib.win
-## and make sure to use the same value here.
-htslib_default_libs=-lz -lm -lws2_32 -lcurl
-
-## Linker options. Make sure to keep Rhtslib::pkgconfig() function (defined
-## in R/zzz.R) in sync with this.
-PKG_LIBS="${USRLIB_DIR}/libhts.a" ${htslib_default_libs} -lpthread
-
 populate-usrlib-dir: htslib mk-usrlib-dir
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.a "${USRLIB_DIR}"
