@@ -12,7 +12,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
             ## See how 'htslib_default_libs' is defined in
             ## htslib-1.7/Makefile.Rhtslib.win and make sure
             ## to use the same value here.
-            htslib_default_libs <- "-lz -lm -lws2_32"
+            htslib_default_libs <- "-lz -lm -lws2_32 -lcurl"
             config <- sprintf('-L"%s" -lhts %s -lpthread',
                               usrlib_dir, htslib_default_libs)
         } else {
@@ -22,7 +22,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
                 ## See how 'htslib_default_libs' is defined in
                 ## htslib-1.7/Makefile.Rhtslib and make sure
                 ## to use the same value here.
-                htslib_default_libs <- "-lz -lm -lbz2 -llzma"
+                htslib_default_libs <- "-lz -lm -lbz2 -llzma -lcurl"
 
                 ## Dynamic linking seems to cause problems on some Linux
                 ## systems. See https://support.bioconductor.org/p/120529/

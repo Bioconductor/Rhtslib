@@ -1,5 +1,5 @@
-# This is Makefile.Rhtslib, a lightly modified version of Makefile to build
-# htslib in the context of 'R CMD INSTALL Rhtslib' on Linux and Mac.
+# This is Makefile.Rhtslib, a lightly modified version of Makefile to
+# build htslib in the context of 'R CMD INSTALL Rhtslib' on Linux and Mac.
 # Author of original Makefile: John Marshall (see Copyright below)
 # Modified by: Hervé Pagès (March 2018)
 # ----------------------------------------------------------------------------
@@ -35,15 +35,13 @@
 #RANLIB = ranlib
 
 # Default libraries to link if configure is not used
-htslib_default_libs = -lz -lm -lbz2 -llzma
+htslib_default_libs = -lz -lm -lbz2 -llzma -lcurl
 
 CPPFLAGS =
 # TODO: probably update cram code to make it compile cleanly with -Wc++-compat
 # For testing strict C99 support add -std=c99 -D_XOPEN_SOURCE=600
 #CFLAGS   = -g -Wall -O2 -pedantic -std=c99 -D_XOPEN_SOURCE=600 -D__FUNCTION__=__func__
-#CFLAGS   = -g -Wall -O2
 CFLAGS   = -g -Wall -O2 -fpic
-#EXTRA_CFLAGS_PIC = -fpic
 EXTRA_CFLAGS_PIC =
 LDFLAGS  =
 LIBS     = $(htslib_default_libs)
@@ -73,8 +71,8 @@ plugindir =
 
 #BUILT_PROGRAMS = \
 #	bgzip \
-#	#htsfile \
-#	#tabix
+#	htsfile \
+#	tabix
 
 #BUILT_TEST_PROGRAMS = \
 #	test/hts_endian \
@@ -172,7 +170,8 @@ LIBHTS_OBJS = \
 	cram/pooled_alloc.o \
 	cram/rANS_static.o \
 	cram/sam_header.o \
-	cram/string_alloc.o
+	cram/string_alloc.o \
+	hfile_libcurl.o
 
 PLUGIN_EXT  =
 PLUGIN_OBJS =
@@ -209,6 +208,7 @@ config.h:
 	echo '#define HAVE_LZMA_H 1' >> $@
 	echo '#define HAVE_FSEEKO 1' >> $@
 	echo '#define HAVE_DRAND48 1' >> $@
+	echo '#define HAVE_LIBCURL 1' >> $@
 
 # And similarly for htslib.pc.tmp ("pkg-config template").  No dependency
 # on htslib.pc.in listed, as if that file is newer the usual way to regenerate
