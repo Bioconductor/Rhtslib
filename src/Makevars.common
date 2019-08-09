@@ -7,10 +7,10 @@ TESTFILES=*.sam *.bam *.vcf *.bcf *.cram *.fa *.fa.fai *.gff *.bed
 
 R_ETC_MAKECONF=${R_HOME}/etc${R_ARCH}/Makeconf
 
-## Preprocessor and linker options. Make sure to keep the Rhtslib::pkgconfig()
-## function (defined in R/zzz.R) in sync with this.
+## Preprocessor and linker options. Make sure the Rhtslib::pkgconfig() function
+## (defined in R/zzz.R) produces the same PKG_CPPFLAGS and PKG_LIBS values.
 PKG_CPPFLAGS=-I"${INCLUDE_DIR}"
-PKG_LIBS="${USRLIB_DIR}/libhts.a" -lcurl
+PKG_LIBS="${USRLIB_DIR}/libhts.a"
 
 .PHONY: all htslib mk-include-dir mk-usrlib-dir mk-testdata-dir populate-include-dir populate-usrlib-dir populate-testdata-dir clean
 

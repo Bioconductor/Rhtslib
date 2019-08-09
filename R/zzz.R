@@ -7,11 +7,25 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
             system.file("usrlib", package="Rhtslib", mustWork=TRUE)
         )
         platform <- Sys.info()[["sysname"]]
-        if (platform == "Windows")
-            usrlib_dir <- file.path(usrlib_dir, .Platform[["r_arch"]])
-        ## See how PKG_LIBS is defined in Rhtslib/src/Makevars.common
-        ## and make sure to produce the same value here.
-        config <- sprintf('%s -lcurl', file.path(usrlib_dir, "libhts.a"))
+        if (platform == "Windows") {
+            r_arch <- .Platform[["r_arch"]]
+            usrlib_dir <- file.path(usrlib_dir, r_arch)
+        }
+        config <- file.path(usrlib_dir, "libhts.a")
+        if (platform == "Windows") {
+            ## See how PKG_LIBS is defined in Rhtslib/src/Makevars.win
+            ## and make sure to produce the same value here.
+            libs <- c("curl", "rtmp", "ssl", "ssh2", "crypto",
+                      "gdi32", "z", "ws2_32", "wldap32", "lwinmm")
+            if (r_arch == "i386")
+                libs <- c(libs, "idn")
+            libs <- paste(sprintf("-l%s", libs), collapse=" ")
+            config <- sprintf("%s -LC:/extsoft/lib/%s %s", config, r_arch, libs)
+        } else {
+            ## See how PKG_LIBS is defined in Rhtslib/src/Makevars
+            ## and make sure to produce the same value here.
+            config <- sprintf("%s -lcurl", config)
+        }
     } else {
         ## See how PKG_CPPFLAGS is defined in Rhtslib/src/Makevars.common
         ## and make sure to produce the same value here.
