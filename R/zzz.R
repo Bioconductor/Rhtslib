@@ -16,7 +16,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
             ## See how PKG_LIBS is defined in Rhtslib/src/Makevars.win
             ## and make sure to produce the same value here.
             libs <- c("curl", "rtmp", "ssl", "ssh2", "crypto",
-                      "gdi32", "z", "ws2_32", "wldap32", "lwinmm")
+                      "gdi32", "z", "ws2_32", "wldap32", "winmm")
             if (r_arch == "i386")
                 libs <- c(libs, "idn")
             libs <- paste(sprintf("-l%s", libs), collapse=" ")
