@@ -31,31 +31,11 @@ CC=`"${R_HOME}/bin/R" CMD config CC`
 AR=`"${R_HOME}/bin/R" CMD config AR`
 RANLIB=`"${R_HOME}/bin/R" CMD config RANLIB`
 
+# Need to deal with CPICFLAGS for this library. Irritating.
 CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS` `"${R_HOME}/bin/R" CMD config CPICFLAGS` 
-
-
-# CC, AR, and RANLIB will be set to the values defined in
-# ${R_HOME}/etc/Makeconf when we call make with:
-#     make -f "${R_HOME}/etc/Makeconf" -f Makefile.Rhtslib
-#CC     = gcc
-#AR     = ar
-#RANLIB = ranlib
 
 # Default libraries to link if configure is not used
 htslib_default_libs = -lz -lm -lbz2 -llzma -lcurl
-
-
-
-
-
-# CPPFLAGS =
-# TODO: probably update cram code to make it compile cleanly with -Wc++-compat
-# For testing strict C99 support add -std=c99 -D_XOPEN_SOURCE=600
-#CFLAGS   = -g -Wall -O2 -pedantic -std=c99 -D_XOPEN_SOURCE=600 -D__FUNCTION__=__func__
-# CFLAGS   = -g -Wall -O2 -fpic
-# EXTRA_CFLAGS_PIC =
-# LDFLAGS  =
-# LIBS     = $(htslib_default_libs)
 
 prefix      = /usr/local
 exec_prefix = $(prefix)
