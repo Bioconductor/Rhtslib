@@ -40,7 +40,7 @@ ifeq ("${R_ARCH}","/i386")
 	htslib_default_libs += -lidn
 endif
 
-CPPFLAGS = -IC:/extsoft/include -DCURL_STATICLIB
+CPPFLAGS = -D_FILE_OFFSET_BITS=64 -IC:/extsoft/include -DCURL_STATICLIB
 # TODO: probably update cram code to make it compile cleanly with -Wc++-compat
 # For testing strict C99 support add -std=c99 -D_XOPEN_SOURCE=600
 #CFLAGS   = -g -Wall -O2 -pedantic -std=c99 -D_XOPEN_SOURCE=600 -D__FUNCTION__=__func__
