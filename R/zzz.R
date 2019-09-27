@@ -30,7 +30,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
         ## See how PKG_CPPFLAGS is defined in Rhtslib/src/Makevars.common
         ## and make sure to produce the same value here.
         include_dir <- system.file("include", package="Rhtslib")
-        config <- sprintf('-I"%s"', include_dir)
+        config <- sprintf('-D_FILE_OFFSET_BITS=64 -I"%s"', include_dir)
     }
     cat(config)
 }
