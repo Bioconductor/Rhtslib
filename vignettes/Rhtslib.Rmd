@@ -100,6 +100,11 @@ e.g.,
 
     SystemRequirements: GNU make
 
+The reason we use `$(shell echo ...)` rather than back-ticks (e.g.
+`` `echo ...` ``) is because the latter causes problems when, after
+evaluation, `PKG_LIBS` and/or `PKG_CPPFLAGS` contain paths with
+whitespaces in them.
+
 If your package needs to add to the `$PKG_LIBS` variable, do so by adding
 to the `PKG_LIBS=$(RHTSLIB_LIBS)` line, e.g.,
 
