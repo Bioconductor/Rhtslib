@@ -21,7 +21,7 @@ Copyright: Unless otherwise noted in the file, all files outside
 Imports: zlibbioc
 LinkingTo: zlibbioc
 Suggests: BiocStyle, knitr
-SystemRequirements: libbz2 & liblzma & libcurl (with header files)
+SystemRequirements: libbz2 & liblzma & libcurl (with header files), GNU make
 StagedInstall: no
 VignetteBuilder: knitr
 URL: https://github.com/Bioconductor/Rhtslib, http://www.htslib.org/

@@ -62,9 +62,9 @@ for an example of a package that compiles and links against `Rhtslib`.
 ## Find headers
 
 In order for the C/C++ compiler to find HTSlib headers (and zlib
-headers on Windows) during package installation, add `Rhtslib` and
-`zlibbioc` to the `LinkingTo` field of the DESCRIPTION file of your
-package, e.g.,
+headers on Windows) during installation of your package, you must
+add `Rhtslib` and `zlibbioc` to the `LinkingTo` field of its
+`DESCRIPTION` file, e.g.,
 
     LinkingTo: Rhtslib, zlibbioc
 
@@ -81,8 +81,8 @@ system.file(package="Rhtslib", "include")
 
 ## Compile and link against the library
 
-To compile and link successfully against the HTSlib included in
-`r Biocpkg("Rhtslib")` a package must include a `src/Makevars` file.
+To compile and link your package successfully against the HTSlib included
+in `r Biocpkg("Rhtslib")`, you must include a `src/Makevars` file.
 
 Create a `src/Makevars` file with the following lines
 
@@ -93,6 +93,12 @@ Create a `src/Makevars` file with the following lines
 
     PKG_LIBS=$(RHTSLIB_LIBS)
     PKG_CPPFLAGS=$(RHTSLIB_CPPFLAGS)
+
+Note that `$(shell ...)` is GNU make syntax so you should add `GNU make`
+to the `SystemRequirements` field of the `DESCRIPTION` file of your package,
+e.g.,
+
+    SystemRequirements: GNU make
 
 If your package needs to add to the `$PKG_LIBS` variable, do so by adding
 to the `PKG_LIBS=$(RHTSLIB_LIBS)` line, e.g.,
