@@ -11,7 +11,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
             r_arch <- .Platform[["r_arch"]]
             usrlib_dir <- file.path(usrlib_dir, r_arch)
         }
-        config <- file.path(usrlib_dir, "libhts.a")
+        usrlib_path <- sprintf("'%s'", file.path(usrlib_dir, "libhts.a"))
         if (platform == "Windows") {
             ## See how PKG_LIBS is defined in Rhtslib/src/Makevars.win
             ## and make sure to produce the same value here.
@@ -20,12 +20,13 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
             if (r_arch == "i386")
                 libs <- c(libs, "idn")
             libs <- paste(sprintf("-l%s", libs), collapse=" ")
-            config <- sprintf("%s -LC:/extsoft/lib/%s %s", config, r_arch, libs)
+            libs <- sprintf("-LC:/extsoft/lib/%s %s", r_arch, libs)
         } else {
             ## See how PKG_LIBS is defined in Rhtslib/src/Makevars
             ## and make sure to produce the same value here.
-            config <- sprintf("%s -lcurl", config)
+            libs <- "-lcurl"
         }
+        config <- paste(usrlib_path, libs)
     } else {
         ## See how PKG_CPPFLAGS is defined in Rhtslib/src/Makevars.common
         ## and make sure to produce the same value here.
@@ -34,7 +35,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
         ## LinkingTo field so the preprocessor option below will automatically
         ## be added. There is no need to add it again here.
         #include_dir <- system.file("include", package="Rhtslib")
-        #config <- paste(config, sprintf('-I"%s"', include_dir))
+        #config <- paste(config, sprintf("-I'%s'", include_dir))
     }
     cat(config)
 }

@@ -1,7 +1,7 @@
 Package: Rhtslib
 Type: Package
 Title: HTSlib high-throughput sequencing library as an R package
-Version: 1.17.8
+Version: 1.17.9
 Authors@R:
     c(person("Nathaniel", "Hayden", email="nhayden@fredhutch.org",
         role=c("led", "aut")),
