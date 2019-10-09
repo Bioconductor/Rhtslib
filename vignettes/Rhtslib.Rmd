@@ -1,7 +1,7 @@
 ---
 title: "Motivation and use of _Rhtslib_"
 author: "Nathaniel Hayden, Martin Morgan"
-date: "Compiled `r doc_date()`;  Modified 3 May 2019"
+date: "Compiled `r doc_date()`;  Modified 9 Oct 2019"
 package: "`r pkg_ver('Rhtslib')`"
 abstract: >
   This package provides version 1.7 of the 'HTSlib' C library for
@@ -13,7 +13,7 @@ vignette: >
   %\VignetteIndexEntry{Motivation and use of Rhtslib}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-output: 
+output:
   BiocStyle::html_document
 ---
 
@@ -53,35 +53,48 @@ an explicit user system dependency on `htslib` directly.
 - Your application uses a defined version of `htslib`, so that you as
   a developer can rely on presence of specific features (and bugs!)
   rather than writing code to manage different library versions.
-  
+
 # Use
 
-There is an example package,
-[`link2Rhtslib`](https://github.com/nhayden/link2Rhtslib), that
-demonstrates how reverse dependencies should link to `Rhtslib`.
+See the [`Rsamtools`](https://github.com/Bioconductor/Rsamtools) package
+for an example of a package that compiles and links against `Rhtslib`.
 
-## Link to the library
+## Find headers
 
-To link successfully to the HTSlib included in `r Biocpkg("Rhtslib")`
-a package must include *both* a `src/Makevars.win` *and*
-`src/Makevars` file.  **Note**: the contents of `src/Makevars.win` and
-`src/Makevars` are almost identical, but not quite. Be careful of the
-differences.
+In order for the C/C++ compiler to find HTSlib headers (and zlib
+headers on Windows) during package installation, add `Rhtslib` and
+`zlibbioc` to the `LinkingTo` field of the DESCRIPTION file of your
+package, e.g.,
 
-Create a `src/Makevars.win` file with the following lines
+    LinkingTo: Rhtslib, zlibbioc
+
+Note that as of R 3.0.2 `LinkingTo` values can include version
+specifications, e.g., `LinkingTo: Rhtslib (>= 0.99.10)`.
+
+In C or C++ code files, use standard techniques, e.g., `#include
+"htslib/hts.h"`. Header files are available for perusal at (enter
+in an R session)
+
+```{R headers}
+system.file(package="Rhtslib", "include")
+```
+
+## Compile and link against the library
+
+To compile and link successfully against the HTSlib included in
+`r Biocpkg("Rhtslib")` a package must include a `src/Makevars` file.
+
+Create a `src/Makevars` file with the following lines
 
     RHTSLIB_LIBS=$(shell echo 'Rhtslib::pkgconfig("PKG_LIBS")'|\
         "${R_HOME}/bin/R" --vanilla --slave)
+    RHTSLIB_CPPFLAGS=$(shell echo 'Rhtslib::pkgconfig("PKG_CPPFLAGS")'|\
+        "${R_HOME}/bin/R" --vanilla --slave)
+
     PKG_LIBS=$(RHTSLIB_LIBS)
+    PKG_CPPFLAGS=$(RHTSLIB_CPPFLAGS)
 
-and a `src/Makevars` file with the following lines
-
-    RHTSLIB_LIBS=`echo 'Rhtslib::pkgconfig("PKG_LIBS")'|\
-        "${R_HOME}/bin/R" --vanilla --slave`
-    PKG_LIBS=$(RHTSLIB_LIBS)
-
-The statement for each platfrom modifies the `$PKG_LIBS` variable. If
-your package needs to add to the `$PKG_LIBS` variable, do so by adding
+If your package needs to add to the `$PKG_LIBS` variable, do so by adding
 to the `PKG_LIBS=$(RHTSLIB_LIBS)` line, e.g.,
 
     PKG_LIBS=$(RHTSLIB_LIBS) -L/path/to/foolib -lfoo
@@ -101,30 +114,10 @@ to the `PKG_LIBS=$(RHTSLIB_LIBS)` line, e.g.,
 [comment]: # environment variable `RHTSLIB_RPATH` to resolve this by
 [comment]: # setting it to the cluster-node accessible path.
 
-## Find headers
-
-In order for the C/C++ compiler to find HTSlib headers (and zlib
-headers on Windows) during package installation, add `Rhtslib` and
-`zlibbioc` to the `LinkingTo` field of the DESCRIPTION file of your
-package, e.g.,
-
-    LinkingTo: Rhtslib, zlibbioc
-
-Note that as of R 3.0.2 `LinkingTo` values can include version
-specifications, e.g., `LinkingTo: Rhtslib (>= 0.99.10)`.
-    
-In C or C++ code files, use standard techniques, e.g., `#include
-"htslib/hts.h"`. Header files are available for perusal at (enter
-in an R session)
-
-```{R headers}
-system.file(package="Rhtslib", "include")
-```
-
 # Implementation notes
 
 `Rhtslib` provides both static and dynamic library versions of HTSlib
 on Linux and Mac OS X platforms, but only the static version on
-Windows. In most cases, for Linux and Mac OS X the procedure above
-will link to the dynamic library version of HTSlib. Please let the
-maintainer know if you run into issues with this strategy.
+Windows. The procedure above will link against the static library
+version of HTSlib on all platforms.
+
