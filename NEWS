@@ -1,3 +1,30 @@
+CHANGES IN VERSION 1.18.0
+-------------------------
+
+NEW FEATURES
+
+    o Compile HTSlib with libcurl enabled
+
+    o Support an installation path that contains whitespaces
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o Switch from dynamic to static linking on all Unix-like systems (see
+      commit db1d8e17)
+
+    o Package now requires libbz2 & liblzma & libcurl (with header files),
+      and GNU make. This is declared in new SystemRequirements field.
+
+BUG FIXES
+
+    o Use preprocessor flag -D_FILE_OFFSET_BITS=64. This addresses nasty
+      problem with big files that get truncated on Windows. See
+      https://support.bioconductor.org/p/124568/
+
+    o Don't overwrite CPPFLAGS, CFLAGS, or LDFLAGS values set in
+      ${R_HOME}/etc/Makeconf on Linux or Mac
+
+
 CHANGES IN VERSION 1.16.0
 -------------------------
 
