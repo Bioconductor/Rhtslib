@@ -1,3 +1,16 @@
+### There should be a much better way to do this.
+.getRconfig <- function(VAR, default=NULL)
+{
+    cmd <- file.path(R.home(), "bin", "R")
+    args <- c("CMD", "config", VAR)
+    val <- suppressWarnings(system2(cmd, args=args, stdout=TRUE))
+    status <- attr(val, "status")
+    ok <- is.null(attr(val, "errmsg")) && (is.null(status) || status == 0)
+    if (!ok)
+        val <- default
+    val
+}
+
 pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
 {
     opt <- match.arg(opt)
@@ -13,6 +26,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
         }
         usrlib_path <- sprintf("'%s'", file.path(usrlib_dir, "libhts.a"))
         if (platform == "Windows") {
+            LOCAL_SOFT <- .getRconfig("LOCAL_SOFT", default="C:/extsoft")
             ## See how PKG_LIBS is defined in Rhtslib/src/Makevars.win
             ## and make sure to produce the same value here.
             libs <- c("curl", "rtmp", "ssl", "ssh2", "crypto",
@@ -20,7 +34,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
             if (r_arch == "i386")
                 libs <- c(libs, "idn")
             libs <- paste(sprintf("-l%s", libs), collapse=" ")
-            libs <- sprintf("-LC:/extsoft/lib/%s %s", r_arch, libs)
+            libs <- sprintf("-L%s/lib/%s %s", LOCAL_SOFT, r_arch, libs)
         } else {
             ## See how PKG_LIBS is defined in Rhtslib/src/Makevars
             ## and make sure to produce the same value here.

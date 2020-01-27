@@ -35,12 +35,12 @@
 #RANLIB = ranlib
 
 # Default libraries to link if configure is not used
-htslib_default_libs = -LC:/extsoft/lib${R_ARCH} -lcurl -lrtmp -lssl -lssh2 -lcrypto -lgdi32 -lz -lws2_32 -lwldap32 -lwinmm
+htslib_default_libs = -L${LOCAL_SOFT}/lib${R_ARCH} -lcurl -lrtmp -lssl -lssh2 -lcrypto -lgdi32 -lz -lws2_32 -lwldap32 -lwinmm
 ifeq ("${R_ARCH}","/i386")
 	htslib_default_libs += -lidn
 endif
 
-CPPFLAGS = -D_FILE_OFFSET_BITS=64 -IC:/extsoft/include -DCURL_STATICLIB
+CPPFLAGS = -D_FILE_OFFSET_BITS=64 -I${LOCAL_SOFT}/include -DCURL_STATICLIB
 # TODO: probably update cram code to make it compile cleanly with -Wc++-compat
 # For testing strict C99 support add -std=c99 -D_XOPEN_SOURCE=600
 #CFLAGS   = -g -Wall -O2 -pedantic -std=c99 -D_XOPEN_SOURCE=600 -D__FUNCTION__=__func__
