@@ -7,7 +7,7 @@ Description: This package provides version 1.7 of the 'HTSlib' C
     package are in the vignette, vignette(package="Rhtslib", "Rhtslib").
 biocViews: DataImport, Sequencing
 URL: https://bioconductor.org/packages/Rhtslib, http://www.htslib.org/
-BugReports: https://github.com/Bioconductor/Rhtslib
+BugReports: https://github.com/Bioconductor/Rhtslib/issues
 Version: 1.21.1
 License: LGPL (>= 2)
 Copyright: Unless otherwise noted in the file, all files outside
