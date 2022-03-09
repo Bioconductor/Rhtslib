@@ -29,10 +29,10 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
             LOCAL_SOFT <- .getRconfig("LOCAL_SOFT", default="C:/extsoft")
             ## See how PKG_LIBS is defined in Rhtslib/src/Makevars.win
             ## and make sure to produce the same value here.
-            libs <- c("curl", "rtmp", "ssl", "ssh2", "crypto",
-                      "gdi32", "z", "ws2_32", "wldap32", "winmm")
-            if (r_arch == "i386")
-                libs <- c(libs, "idn")
+            libs <- c("sbml-static", "winmm", "wldap32", "gdi32", "bz2",
+                      "curl", "rtmp", "ssl", "ssh2", "idn2", "unistring",
+                      "charset", "intl", "iconv", "gcrypt", "crypto",
+                      "gpg-error", "ws2_32", "lzma", "z", "zstd", "mincore")
             libs <- paste(sprintf("-l%s", libs), collapse=" ")
             libs <- sprintf("-L%s/lib/%s %s", LOCAL_SOFT, r_arch, libs)
         } else {

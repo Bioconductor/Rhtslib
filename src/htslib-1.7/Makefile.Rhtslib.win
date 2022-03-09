@@ -35,10 +35,7 @@
 #RANLIB = ranlib
 
 # Default libraries to link if configure is not used
-htslib_default_libs = -L${LOCAL_SOFT}/lib${R_ARCH} -lcurl -lrtmp -lssl -lssh2 -lcrypto -lgdi32 -lz -lws2_32 -lwldap32 -lwinmm
-ifeq ("${R_ARCH}","/i386")
-	htslib_default_libs += -lidn
-endif
+htslib_default_libs = -lsbml-static -lwinmm -lwldap32 -lgdi32 -lbz2 -lcurl -lrtmp -lssl -lssh2 -lidn2 -lunistring -lcharset -lintl -liconv -lgcrypt -lcrypto -lgpg-error -lws2_32 -llzma -lz -lzstd -lmincore
 
 CPPFLAGS = -D_FILE_OFFSET_BITS=64 -I${LOCAL_SOFT}/include -DCURL_STATICLIB
 # TODO: probably update cram code to make it compile cleanly with -Wc++-compat
