@@ -210,7 +210,6 @@ config.h:
 	echo '#define HAVE_LIBLZMA 1' >> $@
 	echo '#define HAVE_LZMA_H 1' >> $@
 	echo '#define HAVE_FSEEKO 1' >> $@
-	echo '#define HAVE_DRAND48 1' >> $@
 	echo '#define HAVE_LIBCURL 1' >> $@
 
 # And similarly for htslib.pc.tmp ("pkg-config template").  No dependency
