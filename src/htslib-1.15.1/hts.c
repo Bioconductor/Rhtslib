@@ -4771,3 +4771,17 @@ void hts_log(enum htsLogLevel severity, const char *context, const char *format,
     }
     errno = save_errno;
 }
+
+/* === BEGIN BIOCONDUCTOR PATCH === */
+
+/*
+ * H.P.: Just does what hts_idx_get_n_no_coor() above in this file does
+ * H.P.: but for the 'n' member instead of 'n_no_coor' member.
+ */
+int32_t hts_idx_get_n(const hts_idx_t* idx)                        /* H.P. */
+{                                                                  /* H.P. */
+    if (idx->fmt == HTS_FMT_CRAI) return 0;                        /* H.P. */
+    return idx->n;                                                 /* H.P. */
+}                                                                  /* H.P. */
+
+/* === END BIOCONDUCTOR PATCH === */

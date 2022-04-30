@@ -1571,6 +1571,12 @@ static inline void *ed_swap_8p(void *x)
     return x;
 }
 
+/* === BEGIN BIOCONDUCTOR PATCH === */
+
+HTSLIB_EXPORT
+int32_t hts_idx_get_n(const hts_idx_t* idx);  // -- by H.P.
+
+/* === END BIOCONDUCTOR PATCH === */
 #ifdef __cplusplus
 }
 #endif

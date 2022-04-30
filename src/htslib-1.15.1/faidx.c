@@ -949,3 +949,135 @@ char *fai_path(const char *fa) {
 
     return fai;
 }
+
+/* === BEGIN BIOCONDUCTOR PATCH === */
+
+/*
+ * H.P.: Like faidx_fetch_seq() above in this file but:
+ * H.P.:   1) writes the incoming sequence to user-supplied 'out' buffer,
+ * H.P.:   2) doesn't write the terminating null byte ('\0'),
+ * H.P.:   3) properly handles 0-length sequences,
+ * H.P.:   4) returns the number of bytes written; -1 on failure.
+ * H.P.: Used in the Rsamtools package.
+ */
+int faidx_fetch_seq2(const faidx_t *fai,                           /* H.P. */
+                const char *c_name, int p_beg_i, int p_end_i,      /* H.P. */
+                char *out)                                         /* H.P. */
+{                                                                  /* H.P. */
+    khiter_t iter;                                                 /* H.P. */
+    faidx1_t val;                                                  /* H.P. */
+    long uoffset;                                                  /* H.P. */
+    int l, c;                                                      /* H.P. */
+                                                                   /* H.P. */
+    // Adjust position                                             /* H.P. */
+    iter = kh_get(s, fai->hash, c_name);                           /* H.P. */
+    if(iter == kh_end(fai->hash))                                  /* H.P. */
+        return -1;                                                 /* H.P. */
+    val = kh_value(fai->hash, iter);                               /* H.P. */
+    if(p_end_i < p_beg_i - 1) p_end_i = p_beg_i - 1;               /* H.P. */
+    if(p_beg_i < 0) p_beg_i = 0;                                   /* H.P. */
+    else if(val.len <= p_beg_i) p_beg_i = val.len - 1;             /* H.P. */
+    if(p_end_i < 0) p_end_i = 0;                                   /* H.P. */
+    else if(val.len <= p_end_i) p_end_i = val.len - 1;             /* H.P. */
+                                                                   /* H.P. */
+    // Now retrieve the sequence                                   /* H.P. */
+    uoffset = (long) val.seq_offset +                              /* H.P. */
+                     p_beg_i / val.line_blen * val.line_len +      /* H.P. */
+                     p_beg_i % val.line_blen;                      /* H.P. */
+    int ret = bgzf_useek(fai->bgzf, uoffset, SEEK_SET);            /* H.P. */
+    if (ret < 0) {                                                 /* H.P. */
+        hts_log_error("Failed to retrieve block. (Seeking in "     /* H.P. */
+                      "a compressed, .gzi unindexed, file?)");     /* H.P. */
+        return -1;                                                 /* H.P. */
+    }                                                              /* H.P. */
+    l = 0;                                                         /* H.P. */
+    while ((c = bgzf_getc(fai->bgzf)) >= 0 &&                      /* H.P. */
+           l < p_end_i - p_beg_i + 1)                              /* H.P. */
+    {                                                              /* H.P. */
+            if (isgraph(c)) out[l++] = c;                          /* H.P. */
+    }                                                              /* H.P. */
+    if (c < 0) {                                                   /* H.P. */
+        hts_log_error("Failed to retrieve block: %s",              /* H.P. */
+                      c == -1 ? "unexpected end of file"           /* H.P. */
+                              : "error reading file");             /* H.P. */
+        return -1;                                                 /* H.P. */
+    }                                                              /* H.P. */
+    return l;                                                      /* H.P. */
+}                                                                  /* H.P. */
+
+/*
+ * H.P.: Like faidx_fetch_seq() above in this file but if coordinates are
+ * H.P.: outside the actual sequence, write N's, rather than adjusting the
+ * H.P.: start,end. Used in the seqbias package (where it was originally
+ * H.P.: implemented by Daniel Jones).
+ */
+char *faidx_fetch_seq_forced_lower(const faidx_t *fai,             /* H.P. */
+                  const char *c_name, int p_beg_i, int p_end_i)    /* H.P. */
+{                                                                  /* H.P. */
+    khiter_t iter;                                                 /* H.P. */
+    faidx1_t val;                                                  /* H.P. */
+    char *seq0, *seq;                                              /* H.P. */
+    long uoffset;                                                  /* H.P. */
+    int l, c;                                                      /* H.P. */
+                                                                   /* H.P. */
+    iter = kh_get(s, fai->hash, c_name);                           /* H.P. */
+    if(iter == kh_end(fai->hash))                                  /* H.P. */
+        return NULL;                                               /* H.P. */
+                                                                   /* H.P. */
+    seq0 = seq = (char *) malloc(p_end_i - p_beg_i + 2);           /* H.P. */
+    if(seq0 == NULL) {                                             /* H.P. */
+        hts_log_error("Out of memory.");                           /* H.P. */
+        return NULL;                                               /* H.P. */
+    }                                                              /* H.P. */
+    seq0[p_end_i - p_beg_i + 1] = '\0';                            /* H.P. */
+                                                                   /* H.P. */
+    val = kh_value(fai->hash, iter);                               /* H.P. */
+                                                                   /* H.P. */
+    /* entirely off the map: all Ns */                             /* H.P. */
+    if(p_beg_i >= (int) val.len || p_end_i < 0) {                  /* H.P. */
+        while(p_beg_i <= p_end_i) {                                /* H.P. */
+            *(seq++) = 'n';                                        /* H.P. */
+            p_beg_i++;                                             /* H.P. */
+        }                                                          /* H.P. */
+        return seq0;                                               /* H.P. */
+    }                                                              /* H.P. */
+                                                                   /* H.P. */
+    /* beginning is off the map */                                 /* H.P. */
+    while(p_beg_i < 0 && p_beg_i <= p_end_i) {                     /* H.P. */
+        *(seq++) = 'n';                                            /* H.P. */
+        p_beg_i++;                                                 /* H.P. */
+    }                                                              /* H.P. */
+                                                                   /* H.P. */
+    /* end is off the map */                                       /* H.P. */
+    while(p_end_i >= (int) val.len) {                              /* H.P. */
+        seq[p_end_i - p_beg_i] = 'n';                              /* H.P. */
+        p_end_i--;                                                 /* H.P. */
+    }                                                              /* H.P. */
+                                                                   /* H.P. */
+    // Now retrieve the sequence                                   /* H.P. */
+    uoffset = (long) val.seq_offset +                              /* H.P. */
+                     p_beg_i / val.line_blen * val.line_len +      /* H.P. */
+                     p_beg_i % val.line_blen;                      /* H.P. */
+    int ret = bgzf_useek(fai->bgzf, uoffset, SEEK_SET);            /* H.P. */
+    if (ret < 0) {                                                 /* H.P. */
+        hts_log_error("Failed to retrieve block. (Seeking in "     /* H.P. */
+                      "a compressed, .gzi unindexed, file?)");     /* H.P. */
+        return NULL;                                               /* H.P. */
+    }                                                              /* H.P. */
+    l = 0;                                                         /* H.P. */
+    while ((c = bgzf_getc(fai->bgzf)) >= 0 &&                      /* H.P. */
+           l < p_end_i - p_beg_i + 1)                              /* H.P. */
+    {                                                              /* H.P. */
+            if (isgraph(c)) seq[l++] = tolower(c);                 /* H.P. */
+    }                                                              /* H.P. */
+    if (c < 0) {                                                   /* H.P. */
+        hts_log_error("Failed to retrieve block: %s",              /* H.P. */
+                      c == -1 ? "unexpected end of file"           /* H.P. */
+                              : "error reading file");             /* H.P. */
+        return NULL;                                               /* H.P. */
+    }                                                              /* H.P. */
+    while(p_beg_i+l <= p_end_i) seq[l++] = 'n';                    /* H.P. */
+    return seq0;                                                   /* H.P. */
+}                                                                  /* H.P. */
+
+/* === END BIOCONDUCTOR PATCH === */
