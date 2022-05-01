@@ -5,7 +5,7 @@
 
 \docType{package}
 \title{
-    An R packaged HTSlib 1.7
+    An R packaged HTSlib 1.15.1
 }
 \description{
 
@@ -27,9 +27,8 @@
 
 \references{
 
-    The HTSlib included in the package is based on release 1.7 of HTSlib
-    found in the GitHub repository at
-    \url{https://github.com/samtools/htslib}
+    The HTSlib included in the package is based on release 1.15.1 of
+    HTSlib found at \url{https://github.com/samtools/htslib/releases/}
 
 }
 

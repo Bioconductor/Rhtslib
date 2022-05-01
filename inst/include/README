@@ -1,9 +1,18 @@
-The HTSlib header files are located in src/htslib-1.7/htslib/ and will be copied
-to ${R_PACKAGE_DIR}/include/htslib/ at installation time. See the mk-include-dir
-and populate-include-dir targets in src/Makevars for how this mechanism is
-implemented.
+The HTSlib header files are located in src/htslib-1.15.1/htslib/ and will
+be copied to ${R_PACKAGE_DIR}/include/htslib/ at installation time. See the
+mk-include-dir and populate-include-dir targets in src/Makevars.common for
+how this mechanism is implemented.
 
-For convenience, some .h and .c files from Samtools are also included here
-and will end up in ${R_PACKAGE_DIR}/include/ at installation time. Note that
-these files come from the top-level folder of the Samtools 1.7 source tree.
+For convenience we've also copied some .h and .c files from the top-level
+folder of the Samtools 1.15.1 source tree to this folder. These files will
+end up in ${R_PACKAGE_DIR}/include/ at installation time.
+
+Finally we've also included our own files:
+
+  - samtools_version.h and samtools_version.c: needed by bam_sort.c
+
+  - samtools-1.7-compat.h: redefine things that used to be defined in
+    Samtools 1.7 but are now gone in Samtools 1.15.1. Bioconductor packages
+    that make use of those things can include this file to make their code
+    compatible with version 1.15.1 of HTSlib and Samtools.
 
