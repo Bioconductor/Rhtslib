@@ -1077,6 +1077,24 @@ int sam_idx_save(htsFile *fp) {
     return 0;
 }
 
+/* === BEGIN BIOCONDUCTOR PATCH === */
+
+/* We re-introduce bam_readrec() in order to fix sam_itr_queryi().
+   See sam_itr_queryi() below. */
+static int bam_readrec(BGZF *bfp, void *ignored, void *bv, int *tid, hts_pos_t *beg, hts_pos_t *end)
+{
+    bam1_t *b = bv;
+    int ret;
+    if ((ret = bam_read1(bfp, b)) >= 0) {
+        *tid = b->core.tid;
+        *beg = b->core.pos;
+        *end = bam_endpos(b);
+    }
+    return ret;
+}
+
+/* === END BIOCONDUCTOR PATCH === */
+
 static int sam_readrec(BGZF *ignored, void *fpv, void *bv, int *tid, hts_pos_t *beg, hts_pos_t *end)
 {
     htsFile *fp = (htsFile *)fpv;
@@ -1634,7 +1652,18 @@ hts_itr_t *sam_itr_queryi(const hts_idx_t *idx, int tid, hts_pos_t beg, hts_pos_
     else if (cidx->fmt == HTS_FMT_CRAI)
         return cram_itr_query(idx, tid, beg, end, sam_readrec);
     else
-        return hts_itr_query(idx, tid, beg, end, sam_readrec);
+        /* === BEGIN BIOCONDUCTOR PATCH === */
+        /* On Feb 4, 2019, the htslib developers modified sam_itr_queryi()
+           to use callback function sam_readrec() instead bam_readrec() here.
+           See commit 4c2c536 at https://github.com/samtools/htslib
+           However this change breaks bam_fetch() defined in
+           inst/include/samtools-1.7-compat.h because it leads to
+           sam_readrec() being called later with its 2nd arg 'fpv'
+           set to 0 (this happens when bam_fetch() calls bam_iter_read()).
+           So we set the callback function back to bam_readrec(). */
+        //return hts_itr_query(idx, tid, beg, end, sam_readrec);
+        return hts_itr_query(idx, tid, beg, end, bam_readrec);
+        /* === END BIOCONDUCTOR PATCH === */
 }
 
 static int cram_name2id(void *fdv, const char *ref)
