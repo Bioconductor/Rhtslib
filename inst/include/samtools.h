@@ -28,7 +28,18 @@ DEALINGS IN THE SOFTWARE.  */
 #include "htslib/hts_defs.h"
 #include "htslib/sam.h"
 
-const char *samtools_version(void);
+/* === BEGIN BIOCONDUCTOR PATCH === */
+
+//const char *samtools_version(void);
+
+#define SAMTOOLS_VERSION_TEXT "1.15.1"
+
+static inline const char *samtools_version()
+{
+    return SAMTOOLS_VERSION_TEXT;
+}
+
+/* === END BIOCONDUCTOR PATCH === */
 
 #define CHECK_PRINTF(fmt,args) HTS_FORMAT(HTS_PRINTF_FMT, (fmt), (args))
 
