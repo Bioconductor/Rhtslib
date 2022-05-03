@@ -1,11 +1,9 @@
-HTSLIB_SOURCE_DIR=htslib-1.7
+HTSLIB_SOURCE_DIR=htslib-1.15.1
 
 INCLUDE_DIR=${R_PACKAGE_DIR}/include
 USRLIB_DIR=${R_PACKAGE_DIR}/usrlib${R_ARCH}
 TESTDATA_DIR=${R_PACKAGE_DIR}/testdata
 TESTFILES=*.sam *.bam *.vcf *.bcf *.cram *.fa *.fa.fai *.gff *.bed
-
-R_ETC_MAKECONF=${R_HOME}/etc${R_ARCH}/Makeconf
 
 ## Preprocessor and linker options. Make sure the Rhtslib::pkgconfig() function
 ## (defined in R/zzz.R) produces the same PKG_CPPFLAGS and PKG_LIBS values.
@@ -21,7 +19,7 @@ Rhtslib.so: populate-usrlib-dir R_init_Rhtslib.o
 R_init_Rhtslib.o: populate-include-dir
 
 htslib:
-	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${R_ETC_MAKECONF}" -f "${HTSLIB_MAKEFILE}"
+	cd "${HTSLIB_SOURCE_DIR}" && $(MAKE) -f "${HTSLIB_MAKEFILE}"
 
 mk-include-dir:
 	mkdir -p "${INCLUDE_DIR}/htslib"
