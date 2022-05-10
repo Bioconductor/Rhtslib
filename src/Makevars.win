@@ -9,7 +9,7 @@ HTSLIB_MAKEFILE=Makefile.Rhtslib.win
 
 ## Linker options. Make sure the Rhtslib::pkgconfig() function (defined in
 ## R/zzz.R) produces the same PKG_LIBS value.
-PKG_LIBS+=-lsbml-static -lwinmm -lwldap32 -lgdi32 -lbz2 -lcurl -lrtmp -lssl -lssh2 -lidn2 -lunistring -lcharset -lintl -liconv -lgcrypt -lcrypto -lgpg-error -lws2_32 -llzma -lz -lzstd -lmincore
+PKG_LIBS+=-lz -lm -lbz2 -llzma -lcurl -lidn2 -lunistring -liconv -lssl -lcrypto -lcrypt32 -lwsock32 -lwldap32 -lssh2 -lgcrypt -lgpg-error -lws2_32 -lzstd -lregex
 
 populate-usrlib-dir: htslib mk-usrlib-dir
 	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.a "${USRLIB_DIR}"

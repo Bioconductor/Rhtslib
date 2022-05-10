@@ -1,5 +1,5 @@
-# This is Makefile.Rhtslib, a minimally modified version of Makefile used
-# to build htslib in the context of 'R CMD INSTALL Rhtslib' on Linux and Mac.
+# This is Makefile.Rhtslib.win, a minimally modified version of Makefile used
+# to build htslib in the context of 'R CMD INSTALL Rhtslib' on Windows+Rtools42.
 # Author of original Makefile: John Marshall (see Copyright below)
 # Modified by: Hervé Pagès (May 2022)
 # ----------------------------------------------------------------------------
@@ -38,9 +38,9 @@ CPPFLAGS := $(shell ${R_HOME}/bin/R CMD config CPPFLAGS)
 LDFLAGS  := $(shell ${R_HOME}/bin/R CMD config LDFLAGS)
 
 # Default libraries to link if configure is not used
-htslib_default_libs = -lz -lm -lbz2 -llzma -lcurl
+htslib_default_libs = -lz -lm -lbz2 -llzma -lcurl -lidn2 -lunistring -liconv -lssl -lcrypto -lcrypt32 -lwsock32 -lwldap32 -lssh2 -lgcrypt -lgpg-error -lws2_32 -lzstd -lregex
 
-CPPFLAGS += -D_FILE_OFFSET_BITS=64
+CPPFLAGS += -D_FILE_OFFSET_BITS=64 -DCURL_STATICLIB
 # TODO: make the 64-bit support for VCF optional via configure, for now add -DVCF_ALLOW_INT64
 #       to CFLAGS manually, here or in config.mk if the latter exists.
 # TODO: probably update cram code to make it compile cleanly with -Wc++-compat
