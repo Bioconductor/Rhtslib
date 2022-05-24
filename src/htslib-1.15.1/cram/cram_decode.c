@@ -48,13 +48,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdint.h>
 #include <inttypes.h>
 
-/* === BEGIN BIOCONDUCTOR PATCH === */
-#ifdef R_INTERNALS_H_
-#undef RAW
-#define RAW HTS_RAW
-#endif
-/* === END BIOCONDUCTOR PATCH === */
-
 #include "cram.h"
 #include "os.h"
 #include "../htslib/hts.h"

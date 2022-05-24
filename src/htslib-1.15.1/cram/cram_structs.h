@@ -217,13 +217,7 @@ enum cram_block_method_int {
     BM_ERROR = -1,
 
     // CRAM 2.x and 3.0
-/* === BEGIN BIOCONDUCTOR PATCH === */
-#ifdef R_INTERNALS_H_
-    HTS_RAW  = 0,
-#else
     RAW      = 0,
-#endif
-/* === END BIOCONDUCTOR PATCH === */
     GZIP     = 1,
     BZIP2    = 2,
     LZMA     = 3,

@@ -69,13 +69,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define crc32(a,b,c) libdeflate_crc32((a),(b),(c))
 #endif
 
-/* === BEGIN BIOCONDUCTOR PATCH === */
-#ifdef R_INTERNALS_H_
-#undef RAW
-#define RAW HTS_RAW
-#endif
-/* === END BIOCONDUCTOR PATCH === */
-
 #include "cram.h"
 #include "os.h"
 #include "../htslib/hts.h"
