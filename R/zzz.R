@@ -15,7 +15,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
         if (platform == "Windows") {
             ## See how PKG_LIBS is defined in Rhtslib/src/Makevars.win
             ## and make sure to produce the same value here.
-            libs <- c("z", "m", "bz2", "lzma", "curl", "idn2", "unistring",
+            libs <- c("z", "m", "bz2", "lzma", "curl", "bcrypt", "idn2", "unistring",
                       "iconv", "ssl", "crypto", "crypt32", "wsock32",
                       "wldap32", "ssh2", "gcrypt", "gpg-error", "ws2_32",
                       "zstd", "regex")

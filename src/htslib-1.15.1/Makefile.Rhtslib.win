@@ -38,7 +38,7 @@ CPPFLAGS := $(shell ${R_HOME}/bin/R CMD config CPPFLAGS)
 LDFLAGS  := $(shell ${R_HOME}/bin/R CMD config LDFLAGS)
 
 # Default libraries to link if configure is not used
-htslib_default_libs = -lz -lm -lbz2 -llzma -lcurl -lidn2 -lunistring -liconv -lssl -lcrypto -lcrypt32 -lwsock32 -lwldap32 -lssh2 -lgcrypt -lgpg-error -lws2_32 -lzstd -lregex
+htslib_default_libs = -lz -lm -lbz2 -llzma -lcurl -lbcrypt -lidn2 -lunistring -liconv -lssl -lcrypto -lcrypt32 -lwsock32 -lwldap32 -lssh2 -lgcrypt -lgpg-error -lws2_32 -lzstd -lregex
 
 CPPFLAGS += -D_FILE_OFFSET_BITS=64 -DCURL_STATICLIB
 # TODO: make the 64-bit support for VCF optional via configure, for now add -DVCF_ALLOW_INT64
@@ -75,7 +75,7 @@ INSTALL_PROGRAM = $(INSTALL)
 # Set by config.mk if plugins are enabled
 plugindir =
 
-all: lib-static lib-shared $(BUILT_PROGRAMS) plugins $(BUILT_TEST_PROGRAMS) \
+all: lib-static $(BUILT_PROGRAMS) plugins $(BUILT_TEST_PROGRAMS) \
      htslib_static.mk htslib-uninstalled.pc
 
 ALL_CPPFLAGS = -I. $(CPPFLAGS)
