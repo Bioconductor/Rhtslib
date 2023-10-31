@@ -1,6 +1,6 @@
 Package: Rhtslib
 Title: HTSlib high-throughput sequencing library as an R package
-Description: This package provides version 1.15.1 of the 'HTSlib' C
+Description: This package provides version 1.18 of the 'HTSlib' C
     library for high-throughput sequence analysis. The package is
     primarily useful to developers of other R packages who wish to
     make use of HTSlib. Motivation and instructions for use of this
@@ -8,11 +8,11 @@ Description: This package provides version 1.15.1 of the 'HTSlib' C
 biocViews: DataImport, Sequencing
 URL: https://bioconductor.org/packages/Rhtslib, http://www.htslib.org/
 BugReports: https://github.com/Bioconductor/Rhtslib/issues
-Version: 2.5.0
+Version: 2.99.0
 License: LGPL (>= 2)
 Copyright: Unless otherwise noted in the file, all files outside
-    src/htslib-1.15.1 or inst/include copyright Bioconductor; for files inside
-    src/htslib-1.15.1 or inst/include, see file src/htslib-1.15.1/LICENSE.
+    src/htslib-1.18 or inst/include copyright Bioconductor; for files inside
+    src/htslib-1.18 or inst/include, see file src/htslib-1.18/LICENSE.
 Encoding: UTF-8
 Authors@R:
     c(person("Nathaniel", "Hayden", email="nhayden@fredhutch.org",
