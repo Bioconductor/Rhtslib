@@ -5,7 +5,7 @@
 #include <htslib/sam.h>
 #include <bam_plbuf.h>
 
-/* Defined in samtools-1.7/bam.h and gone in samtools-1.15.1 */
+/* Defined in samtools-1.7/bam.h and gone in samtools-1.18 */
 
 typedef BGZF *bamFile;
 #define bam_open(fn, mode) bgzf_open(fn, mode)
@@ -48,7 +48,7 @@ static inline void bam_iter_destroy(bam_iter_t iter) { bam_itr_destroy(iter); }
 
 static inline uint32_t bam_calend(const bam1_core_t *c, const uint32_t *cigar) { return c->pos + (c->n_cigar? bam_cigar2rlen(c->n_cigar, cigar) : 1); }
 
-/* Defined in samtools-1.7/bam.c and gone in samtools-1.15.1 */
+/* Defined in samtools-1.7/bam.c and gone in samtools-1.18 */
 
 static inline int bam_fetch(bamFile fp, const bam_index_t *idx, int tid, int beg, int end, void *data, bam_fetch_f func)
 {
@@ -63,7 +63,7 @@ static inline int bam_fetch(bamFile fp, const bam_index_t *idx, int tid, int beg
     return (ret == -1)? 0 : ret;
 }
 
-/* Defined in samtools-1.7/sam.h and gone in samtools-1.15.1 */
+/* Defined in samtools-1.7/sam.h and gone in samtools-1.18 */
 
 typedef struct {
     samFile *file;
@@ -75,7 +75,7 @@ typedef struct {
 static inline int samread(samfile_t *fp, bam1_t *b) { return sam_read1(fp->file, fp->header, b); }
 static inline int samwrite(samfile_t *fp, const bam1_t *b) { return sam_write1(fp->file, fp->header, b); }
 
-/* Defined in samtools-1.7/sam.c and gone in samtools-1.15.1 */
+/* Defined in samtools-1.7/sam.c and gone in samtools-1.18 */
 
 static inline samfile_t *samopen(const char *fn, const char *mode, const void *aux)
 {
@@ -155,7 +155,7 @@ static inline int sampileup(samfile_t *fp, int mask, bam_pileup_f func, void *fu
     return 0;
 }
 
-/* Defined in samtools-1.7/bam_aux.c and gone in samtools-1.15.1 */
+/* Defined in samtools-1.7/bam_aux.c and gone in samtools-1.18 */
 
 static inline int bam_parse_region(bam_header_t *header, const char *str, int *ref_id, int *beg, int *end)
 {
