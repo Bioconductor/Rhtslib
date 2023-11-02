@@ -40,6 +40,9 @@ DEALINGS IN THE SOFTWARE.  */
 #include <assert.h>
 #include <pthread.h>
 #include <inttypes.h>
+/* === BEGIN BIOCONDUCTOR PATCH === */
+#include "bam_sort.h"
+/* === END BIOCONDUCTOR PATCH === */
 #include "htslib/ksort.h"
 #include "htslib/hts_os.h"
 #include "htslib/khash.h"
@@ -162,7 +165,13 @@ KLIST_INIT(hdrln, char*, hdrln_free_char)
 
 static template_coordinate_key_t* template_coordinate_key(bam1_t *b, template_coordinate_key_t *key, sam_hdr_t *hdr, khash_t(const_c2c) *lib_lookup);
 
+/* === BEGIN BIOCONDUCTOR PATCH ===
+
+// We define this in bam_sort.h
 typedef enum {Coordinate, QueryName, TagCoordinate, TagQueryName, MinHash, TemplateCoordinate} SamOrder;
+
+   === END BIOCONDUCTOR PATCH === */
+
 static SamOrder g_sam_order = Coordinate;
 static char g_sort_tag[2] = {0,0};
 
