@@ -23,7 +23,7 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
         } else {
             ## See how PKG_LIBS is defined in Rhtslib/src/Makevars
             ## and make sure to produce the same value here.
-            libs <- "-lcurl"
+            libs <- "-lcurl -lbz2 -llzma -lz"
         }
         config <- paste(usrlib_path, libs)
     } else {
