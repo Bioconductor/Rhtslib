@@ -9,7 +9,7 @@ HTSLIB_MAKEFILE=Makefile.Rhtslib
 
 ## Linker options. Make sure the Rhtslib::pkgconfig() function (defined in
 ## R/zzz.R) produces the same PKG_LIBS value.
-PKG_LIBS+=-lcurl
+PKG_LIBS+=-lcurl -lbz2 -llzma -lz
 
 ## Even though we should try to avoid using GNU 'make' extensions (for por-
 ## tability), we use one here to detect the platform :-/ Is there a more
