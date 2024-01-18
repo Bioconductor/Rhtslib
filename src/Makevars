@@ -7,8 +7,11 @@ include Makevars.common
 
 HTSLIB_MAKEFILE=Makefile.Rhtslib
 
-## Linker options. Make sure the Rhtslib::pkgconfig() function (defined in
-## R/zzz.R) produces the same PKG_LIBS value.
+## Linker options. Even though linking only to libcurl seems to
+## work, we should also link to libbz2, liblzma, and libz. See
+## https://github.com/Bioconductor/Rhtslib/pull/35 for an extended discussion.
+## Make sure the Rhtslib::pkgconfig() function (defined in R/zzz.R) produces
+## the same PKG_LIBS value.
 PKG_LIBS+=-lcurl -lbz2 -llzma -lz
 
 ## Even though we should try to avoid using GNU 'make' extensions (for por-
