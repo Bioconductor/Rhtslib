@@ -404,7 +404,7 @@ HTSLIB_EXPORT
 int faidx_fetch_seq2(const faidx_t *fai, const char *c_name, int p_beg_i, int p_end_i, char *out);
 
 /// Alternative to faidx_fetch_seq() -- originally by Daniel Jones (author of
-/// the seqbias package), moved to Rhtslib and ported to htslib-1.15.1 by H.P.
+/// the seqbias package), moved to Rhtslib and ported to htslib-1.18 by H.P.
 /** @param  fai  Pointer to the faidx_t struct
     @param  c_name Region name
     @param  p_beg_i  Beginning position number (zero-based)
