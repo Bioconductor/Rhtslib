@@ -15,10 +15,19 @@ pkgconfig <- function(opt=c("PKG_LIBS", "PKG_CPPFLAGS"))
         if (platform == "Windows") {
             ## See how PKG_LIBS is defined in Rhtslib/src/Makevars.win
             ## and make sure to produce the same value here.
-            libs <- c("z", "m", "bz2", "lzma", "curl", "bcrypt", "idn2", "unistring",
-                      "iconv", "ssl", "crypto", "crypt32", "wsock32",
-                      "wldap32", "ssh2", "gcrypt", "gpg-error", "ws2_32",
-                      "zstd", "regex")
+            libs <- c("m", "bz2", "lzma", "curl")
+            R_TOOLS_SOFT <- tools::Rcmd("config R_TOOLS_SOFT", stdout=TRUE)
+            syslibs <- paste0(R_TOOLS_SOFT, "/lib/")
+            if (dir.exists(syslibs)) {
+                if (file.exists(paste0(syslibs, "libpsl.a")))
+                    libs <- append(libs, "psl")
+                if (file.exists(paste0(syslibs, "libbrotlidec.a")))
+                    libs <- append(libs, c("brotlidec", "brotlicommon"))
+            }
+            libs <- append(libs, c("bcrypt", "idn2", "unistring",
+                           "iconv", "ssl", "crypto", "z", "crypt32", "wsock32",
+                           "wldap32", "ssh2", "gcrypt", "gpg-error", "ws2_32",
+                           "zstd", "regex"))
             libs <- paste(sprintf("-l%s", libs), collapse=" ")
         } else {
             ## See how PKG_LIBS is defined in Rhtslib/src/Makevars
